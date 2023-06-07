@@ -13,10 +13,11 @@ import json
 from flatten_json import flatten_json
 
 """ IMPORT DATA """
-data = open('training\data.json')
+data = open('trainingdata\data.json')
 loaded_data = json.load(data)
 flat = loaded_data
 
+num_items = 5
 """
 [[{'altitude': 22, 'heading': 32, 'id': 'red', 'dataTrail': {}, 'type': 0, 'startPos': {'x': 226, 'y': 93}, 'intent': {'desiredHeading': 270, 'desiredAlt': 0, 'desiredSpeed': 450, 'desiredLoc': []}, 'capping': False}
 ,{'altitude': 29, 'heading': 32, 'id': 'red', 'dataTrail': {}, 'type': 0, 'startPos': {'x': 232.7843847692514, 'y': 97.23935411386564}, 'intent': {'desiredHeading': 270, 'desiredAlt': 0, 'desiredSpeed': 450, 'desiredLoc': []}, 'capping': False},
@@ -27,7 +28,8 @@ each picture has 0-m groups
 each group has heading, starting position(x,y), altitude
 'n_pic' --> Label y
 data x as follows:
-['n_groups_i_j_startPos_x', 'n_groups_i_j_startPos_y', 'n_groups_i_j_altitude', 'n_groups_i_j_heading']
+['n_groups_i_j_startPos_x', 'n_groups_i_j_startPos_y',
+    'n_groups_i_j_altitude', 'n_groups_i_j_heading']
 where i is the number of groups or shapes in the picture
 
 """
@@ -43,44 +45,33 @@ startPositions = {}
 
 n = 0
 for key in flat:
-    groups = flat.get(key)
-    startPositions[n] = []
-    for i in range(0, groups):
-        for j in range(0, groups[i]):
-            nextx = groups[i][j].get('startPos').get('x')
-            nexty = groups[i][j].get('startPos').get('y')
+    groups = key.get("groups")
+    startPositions[n] = {}
+    for i in range(0, len(groups)):
+        startPositions[n]["x"] = []
+        startPositions[n]["y"] = []
+        for j in range(0, len(groups[i])):
             startPos = groups[i][j].get('startPos')
-            startPositions[n].append(startPos)
+            np.append(startPositions[n]["x"], startPos.get("x"))
+            np.append(startPositions[n]["y"], startPos.get("y"))
     n = n+1
 
-    found_label = False
     if 'pic' in key:
-        found_label = True
-        for n in range(0, 1000):
-            key = f"{n}_pic"
-            try:
-                val = flat[key]
-                if 'AZIMUTH' in val:
-                    Y = np.append(Y, 'AZIMUTH')
-                elif 'RANGE' in val:
-                    Y = np.append(Y, 'RANGE')
-                elif 'WALL' in val:
-                    Y = np.append(Y, 'WALL')
-                elif 'LADDER' in val:
-                    Y = np.append(Y, 'LADDER')
-                elif 'CHAMPAGNE' in val:
-                    Y = np.append(Y, 'CHAMPAGNE')
-                elif 'VIC' in val:
-                    Y = np.append(Y, 'VIC')
-                elif 'SINGLE' in val:
-                    Y = np.append(Y, 'SINGLE')
-            except KeyError:
-                continue
-        if len(Y) == 0:
-            break
-        else:
-            # print(Y)
-            break
+        val = key.get("pic")
+        if 'AZIMUTH' in val:
+            Y = np.append(Y, 'AZIMUTH')
+        elif 'RANGE' in val:
+            Y = np.append(Y, 'RANGE')
+        elif 'WALL' in val:
+            Y = np.append(Y, 'WALL')
+        elif 'LADDER' in val:
+            Y = np.append(Y, 'LADDER')
+        elif 'CHAMPAGNE' in val:
+            Y = np.append(Y, 'CHAMPAGNE')
+        elif 'VIC' in val:
+            Y = np.append(Y, 'VIC')
+        elif 'SINGLE' in val:
+            Y = np.append(Y, 'SINGLE')
 """
 Labels
 1: Azimuth, 2: Range, 3: Wall
@@ -102,18 +93,20 @@ file_path = os.path.join('output', 'Y.txt')
 img_size = (500, 500)
 save_dir = 'output'
 np.savetxt(file_path, Y, fmt='%s')
-for n in range(1000):
+
+
+for n in range(num_items):
     fig, ax = plt.subplots()
-    #fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+    # fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
     ax.scatter(startPositions[n].get(
-        "x"), startPositions[n].get('y'), c='black', marker='3')
+        "x"), startPositions[n].get("y"), c='black', marker='3')
     ax.set_title("")  # (f"Group {n}")
     ax.set_xlabel("")
     ax.set_ylabel("")
     # ax.set_xlabel("X1")
     # ax.set_ylabel("X2")
-    #ax.set_rlim(0, 100)
-    #ax.set_thetalim(0, 2*np.pi)
+    # ax.set_rlim(0, 100)
+    # ax.set_thetalim(0, 2*np.pi)
     ax.set_xlim(0, 400)
     ax.set_ylim(-200, 200)
     ax.spines['bottom'].set_visible(False)

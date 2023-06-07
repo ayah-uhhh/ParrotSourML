@@ -13,28 +13,11 @@ from flatten_json import flatten_json
 """ IMPORT DATA """
 data = open('\\Users\\ayaha\\OneDrive\\Documents\\MachineLearning\\data1000.json')
 data1000=json.load(data)
-#print(data5)
-#plot(data5)
 
-""" DATA MANIPULATION ATTEMPT 1 """
-# data1 = pd.json_normalize(data5)
-# pd.json_normalize(data5,max_level=0)
-# ohboy = pd.json_normalize(data5,record_path=['startPos'],meta =['x','y'])
 
-""" DATA MANIPULATION ATTEMPT 2 """
 """flatten"""
 flat = flatten_json(data1000)
 #print(flat) 
-    
-
-""" DATA MANIPULATION ATTEMPT 3 """
-"""convert to a dataframe"""
-# df = pd.DataFrame.from_dict(data5)
-# print(df)
-# df[['altitude','heading','id','dataTrail','type','startPos','intent']]=df["groups"].apply(lambda x: pd.Series(str(x).split(",")))
-# df2 = pd.read_json(df["groups"],orient='columns',typ='series')
-# print(df2)
-
 
 """
 [[{'altitude': 22, 'heading': 32, 'id': 'red', 'dataTrail': {}, 'type': 0, 'startPos': {'x': 226, 'y': 93}, 'intent': {'desiredHeading': 270, 'desiredAlt': 0, 'desiredSpeed': 450, 'desiredLoc': []}, 'capping': False}
@@ -51,32 +34,7 @@ each group has heading, starting position(x,y), altitude
  where i is the number of groups or shapes in the picture
  
  """
-"""extract relevant numerical information: INTUITION """
-#y = array[]
-#x = array[]
-# for n in range (0,4):
-#     y = (df(n))
-#     for i in range (0,10):
-#         for j in range(0,10):
-#             x = (fdata5(n_groups_i_j_startPos_x, n_groups_i_j_startPos_y, n_groups_i_j_altitude, n_groups_i_j_heading))
-"""practicing extraction"""
 
-# for key in flat:
-#     # if '_heading' in key: # I also think we dont need heading right now
-#     #     print(heading)
-   
-#     if 'startPos_x' in key:
-#         X1 = np.append(X1, flat[key])
-        
-#     if 'startPos_y' in key:
-#         X2 = np.append(X2, flat[key])
-       
-#     # if '_altitude' in key:        # I do not think altitude will be needed initially
-#     #     altitude = (key, flat[key])
-#     #     #print(altitude)      
-#     if '_pic' in key:
-#         y = (key, flat[key])
-#         #print(y)
 """Extract numerical information"""
 X1 = np.transpose(np.array([]))
 X2 = np.transpose(np.array([]))
@@ -117,23 +75,6 @@ for key in flat:
             #print(X2)
             break
 
-# found_altitude = False
-# for key in flat:
-#     if '_altitude' in key:
-#         found_altitude = True
-#         for n in range (0,4):
-#             for i in range(0,5):
-#                 for j in range(0,5):
-#                     key = f"{n}_groups_{i}_{j}_altitude"
-#                     try:
-#                         X3 = np.append(X3, flat[key])
-#                     except KeyError:
-#                         continue
-#         if len(X3) == 0:
-#             break
-#         else:
-#             print(X3)
-#             break
 """
  Labels
  1: Azimuth, 2: Range, 3: Wall
@@ -169,51 +110,6 @@ for key in flat:
         else:
             #print(Y)
             break 
-# found_label = False
-# for key in flat:
-#     if '_pic' in key:
-#         found_label = True
-#         for n in range (0,1000):
-#             key = f"{n}_pic"
-#             try:
-#                 val = flat[key]
-#                 if 'AZIMUTH' in val:
-#                     Y = np.append(Y,1)
-#                 elif 'RANGE' in val:
-#                     Y = np.append(Y,2)
-#                 elif 'WALL' in val:
-#                     Y = np.append(Y,3)
-#                 elif 'LADDER' in val:
-#                     Y = np.append(Y,4)
-#                 elif 'CHAMPAGNE' in val:
-#                     Y = np.append(Y,5)
-#                 elif 'VIC' in val:
-#                     Y = np.append(Y,6)
-#                 elif 'SINGLE' in val:
-#                     Y = np.append(Y,7)
-#             except KeyError:
-#                 continue
-#         if len(Y) == 0:
-#             break
-#         else:
-#             #print(Y)
-#             break 
-# found_label = False
-# for key in flat:
-#     if '_pic' in key:
-#         found_label = True
-#         for n in range (0,1000):
-#             key = f"{n}_pic"
-#             try:
-#                 Y = np.append(Y, flat[key])
-#             except KeyError:
-#                 continue
-#         if len(Y) == 0:
-#             break
-#         else:
-#             #print(Y)
-#             break 
-
 
 """ 
 Take X1 and X2 ---> matrix of points

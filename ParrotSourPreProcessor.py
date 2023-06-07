@@ -48,12 +48,18 @@ for key in flat:
     groups = key.get("groups")
     startPositions[n] = {}
     for i in range(0, len(groups)):
-        startPositions[n]["x"] = []
-        startPositions[n]["y"] = []
+        newx = []
+        newy = []
+        # startPositions[n]["x"] = []
+        # startPositions[n]["y"] = []
         for j in range(0, len(groups[i])):
             startPos = groups[i][j].get('startPos')
-            np.append(startPositions[n]["x"], startPos.get("x"))
-            np.append(startPositions[n]["y"], startPos.get("y"))
+            newx.append(startPos.get("x"))
+            newy.append(startPos.get("y"))
+        startPositions[n]["x"] = newx
+        startPositions[n]["y"] = newy
+        # np.append(startPositions[n]["x"], startPos.get("x"))
+        # np.append(startPositions[n]["y"], startPos.get("y"))
     n = n+1
 
     if 'pic' in key:

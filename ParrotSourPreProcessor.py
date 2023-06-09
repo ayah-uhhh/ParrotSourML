@@ -7,7 +7,6 @@ Created on Fri Mar 10 16:47:31 2023
 from PIL import Image
 import os
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import json
 from flatten_json import flatten_json

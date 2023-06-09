@@ -20,9 +20,9 @@ loaded_data = json.load(data)
 Y = np.transpose(np.array([]))
 
 startPositions = {}
-n=0
-for k in loaded_data:  # hopefully being the pictures
-    groups = k.get("groups")  # stuck here. when key is in flat[k] it no longer has .get
+n = 0
+for k in loaded_data:  # pictures
+    groups = k.get("groups")
     startPositions[n] = {}
     newx = []
     newy = []
@@ -33,9 +33,9 @@ for k in loaded_data:  # hopefully being the pictures
             newy.append(startPos.get("y"))
         startPositions[n]["x"] = newx
         startPositions[n]["y"] = newy
-    n=n+1
+    n = n + 1
 
-    # Make the answer key 
+    # Make the answer key
     if "pic" in k:
         val = k.get("pic")
         if "AZIMUTH" in val:
@@ -54,7 +54,6 @@ for k in loaded_data:  # hopefully being the pictures
             Y = np.append(Y, "SINGLE")
 
 
-
 """
 Take X1 and X2 ---> matrix of points
 """
@@ -67,7 +66,7 @@ I want one plot for every set of points in the same group {n}
 file_path = os.path.join("output", "Y.txt")
 
 if not os.path.exists("output"):
-  os.makedirs("output")
+    os.makedirs("output")
 
 open(file_path, "w+")
 img_size = (500, 500)

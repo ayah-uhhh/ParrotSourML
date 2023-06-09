@@ -88,7 +88,7 @@ for n in range(len(startPositions)):
     ax.spines["right"].set_visible(False)
     ax.set_xticks([])
     ax.set_yticks([])
-    file_name = f"group_{n}.png"
+    file_name = f"group_{n+1}.png"
     file_path = os.path.join(save_dir, file_name)
     plt.savefig(file_path)
     plt.close(fig)

@@ -13,7 +13,7 @@ import json
 from flatten_json import flatten_json
 
 """ IMPORT DATA """
-data = open('trainingdata\data.json')
+data = open("trainingdata\data.json")
 loaded_data = json.load(data)
 flat = loaded_data
 
@@ -29,7 +29,7 @@ each group has heading, starting position(x,y), altitude
 'n_pic' --> Label y
 data x as follows:
 ['n_groups_i_j_startPos_x', 'n_groups_i_j_startPos_y',
-    'n_groups_i_j_altitude', 'n_groups_i_j_heading']
+'n_groups_i_j_altitude', 'n_groups_i_j_heading']
 where i is the number of groups or shapes in the picture
 
 """
@@ -37,47 +37,44 @@ where i is the number of groups or shapes in the picture
 """Extract numerical information"""
 Y = np.transpose(np.array([]))
 
-# possibly the angle
-found_xPos = False
-found_yPos = False
+
+# n = 0
 
 startPositions = {}
+# for key in flat:
+for k in range(len(flat)):  # hopefully being the pictures
+    for key in flat[k]:
+        groups = key.get(
+            "groups"
+        )  # stuck here. when key is in flat[k] it no longer has .get
+        startPositions[k] = {}
+        for i in range(len(groups)):  # group number in pictures
+            newx = []
+            newy = []
+            for j in range(0, len(groups[i])):  # individual points in groups
+                startPos = groups[i][j].get("startPos")
+                newx.append(startPos.get("x"))
+                newy.append(startPos.get("y"))
+                startPositions[k]["x"] += newx
+                startPositions[k]["y"] += newy
+    # n += 1
 
-n = 0
-for key in flat:
-    groups = key.get("groups")
-    startPositions[n] = {}
-    for i in range(0, len(groups)):
-        newx = []
-        newy = []
-        # startPositions[n]["x"] = []
-        # startPositions[n]["y"] = []
-        for j in range(0, len(groups[i])):
-            startPos = groups[i][j].get('startPos')
-            newx.append(startPos.get("x"))
-            newy.append(startPos.get("y"))
-        startPositions[n]["x"] = newx
-        startPositions[n]["y"] = newy
-        # np.append(startPositions[n]["x"], startPos.get("x"))
-        # np.append(startPositions[n]["y"], startPos.get("y"))
-    n = n+1
-
-    if 'pic' in key:
+    if "pic" in key:
         val = key.get("pic")
-        if 'AZIMUTH' in val:
-            Y = np.append(Y, 'AZIMUTH')
-        elif 'RANGE' in val:
-            Y = np.append(Y, 'RANGE')
-        elif 'WALL' in val:
-            Y = np.append(Y, 'WALL')
-        elif 'LADDER' in val:
-            Y = np.append(Y, 'LADDER')
-        elif 'CHAMPAGNE' in val:
-            Y = np.append(Y, 'CHAMPAGNE')
-        elif 'VIC' in val:
-            Y = np.append(Y, 'VIC')
-        elif 'SINGLE' in val:
-            Y = np.append(Y, 'SINGLE')
+        if "AZIMUTH" in val:
+            Y = np.append(Y, "AZIMUTH")
+        elif "RANGE" in val:
+            Y = np.append(Y, "RANGE")
+        elif "WALL" in val:
+            Y = np.append(Y, "WALL")
+        elif "LADDER" in val:
+            Y = np.append(Y, "LADDER")
+        elif "CHAMPAGNE" in val:
+            Y = np.append(Y, "CHAMPAGNE")
+        elif "VIC" in val:
+            Y = np.append(Y, "VIC")
+        elif "SINGLE" in val:
+            Y = np.append(Y, "SINGLE")
 """
 Labels
 1: Azimuth, 2: Range, 3: Wall
@@ -95,17 +92,15 @@ I want one plot for every set of points in the same group {n}
 
 # Create a dictionary to store X1 and X2 values for each n_group
 # Create scatter plots for each n_group
-file_path = os.path.join('output', 'Y.txt')
+file_path = os.path.join("output", "Y.txt")
 img_size = (500, 500)
-save_dir = 'output'
-np.savetxt(file_path, Y, fmt='%s')
+save_dir = "output"
+np.savetxt(file_path, Y, fmt="%s")
 
-
-for n in range(num_items):
+for n in range(1):
     fig, ax = plt.subplots()
     # fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
-    ax.scatter(startPositions[n].get(
-        "x"), startPositions[n].get("y"), c='black', marker='3')
+    ax.scatter(startPositions[n]["x"], startPositions[n]["y"], c="black", marker="3")
     ax.set_title("")  # (f"Group {n}")
     ax.set_xlabel("")
     ax.set_ylabel("")
@@ -115,25 +110,23 @@ for n in range(num_items):
     # ax.set_thetalim(0, 2*np.pi)
     ax.set_xlim(0, 400)
     ax.set_ylim(-200, 200)
-    ax.spines['bottom'].set_visible(False)
-    ax.spines['left'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
     ax.set_xticks([])
     ax.set_yticks([])
     file_name = f"group_{n}.png"
     file_path = os.path.join(save_dir, file_name)
     plt.savefig(file_path)
-
     plt.close(fig)
+
     with Image.open(file_path) as img:
         center_x = img.width // 2
         center_y = img.height // 2
-
         left = max(0, center_x - img_size[0] // 2)
         right = min(img.width, center_x + img_size[0] // 2)
         top = max(0, center_y - img_size[1] // 2)
         bottom = min(img.height, center_y + img_size[1] // 2)
-
         cropped_img = img.crop((left, top, right, bottom))
         cropped_img.save(file_path)

@@ -13,7 +13,7 @@ import json
 from flatten_json import flatten_json
 
 """ IMPORT DATA """
-data = open("trainingdata\data.json")
+data = open("trainingdata\data200.json")
 loaded_data = json.load(data)
 
 """Extract numerical information"""

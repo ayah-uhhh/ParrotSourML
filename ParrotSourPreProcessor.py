@@ -9,7 +9,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import json
-from flatten_json import flatten_json
+import csv
 
 """ IMPORT DATA """
 data = open("trainingdata\data200.json")
@@ -101,3 +101,6 @@ for n in range(len(startPositions)):
         bottom = min(img.height, center_y + img_size[1] // 2)
         cropped_img = img.crop((left, top, right, bottom))
         cropped_img.save(file_path)
+
+with open("start_positions.json", "w") as file:  # save data
+    json.dump(startPositions, file)

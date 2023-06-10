@@ -6,43 +6,59 @@ Created on Fri Mar 31 11:15:48 2023
 """
 import numpy as np
 import pandas as pd
-from matplotlib.pyplot import *
+import matplotlib.pyplot as plt
+import scipy
+import matplotlib as mpl
+from alive_progress import alive_bar
 import json
-from flatten_json import flatten_json
+import sys
+import re
 
-datab = open('\\Users\\ayaha\\OneDrive\\Documents\\MachineLearning\\data1000.json')
-data1000=json.load(datab)
-flat = flatten_json(data1000)
-Y = np.transpose(np.array([]))
+""" IMPORT DATA """
+data = open("trainingdata\data1000.json")
+loaded_data = json.load(data)
+
+Y = []
 
 
-found_label = False
-for key in flat:
-    if '_pic' in key:
-        found_label = True
-        for n in range (0,1000):
-            key = f"{n}_pic"
-            try:
-                val = flat[key]
-                if 'AZIMUTH' in val:
-                    Y = np.append(Y,'AZIMUTH')
-                elif 'RANGE' in val:
-                    Y = np.append(Y,'RANGE')
-                elif 'WALL' in val:
-                    Y = np.append(Y,'WALL')
-                elif 'LADDER' in val:
-                    Y = np.append(Y,'LADDER')
-                elif 'CHAMPAGNE' in val:
-                    Y = np.append(Y,'CHAMPAGNE')
-                elif 'VIC' in val:
-                    Y = np.append(Y,'VIC')
-                elif 'SINGLE' in val:
-                    Y = np.append(Y,'SINGLE')
-            except KeyError:
-                continue
-        if len(Y) == 0:
-            break
-        else:
-            print(Y)
-            break 
-hist(Y,7)
+def zscore(s):
+    return (s - np.mean(s, axis=0)) / np.std(s, axis=0)
+
+
+labels = ['AZIMUTH', 'RANGE', 'WALL', "LADDER", "CHAMPAGNE", "VIC", "SINGLE"]
+
+"""Extract label information"""
+with alive_bar(len(loaded_data)) as bar:
+    print("Generating histogram bins...")
+    for k in loaded_data:  # pictures
+
+        # Make the answer key
+        if "pic" in k:
+            val = k.get("pic")
+
+            found_label = [label for label in labels if (label in val)][0]
+            Y = np.append(Y, found_label)
+
+        bar()
+
+mpl.use("TkAgg")
+hist = plt.hist(Y, 7)
+
+deviations = scipy.stats.zscore(hist[0], axis=0)
+
+outliers = []
+n = 0
+MAX_ALLOWED_DEVS = 2
+for x in deviations:
+    if (abs(x) > MAX_ALLOWED_DEVS):
+        outliers.append(n)
+    n += 1
+
+if len(outliers) == 0:
+    print(u'\u2713' + " Data within 2 standard deviations")
+else:
+    print("X Data not within 2 standard deviations")
+    print("Outliers: ")
+    for x in outliers:
+        print(labels[x])
+plt.show()

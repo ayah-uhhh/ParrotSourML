@@ -7,9 +7,15 @@ Created on Fri Mar 10 16:47:31 2023
 from PIL import Image
 import os
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import json
 import csv
+import glob
+
+files = glob.glob('output/*')
+for f in files:
+    os.remove(f)
 
 """ IMPORT DATA """
 data = open("trainingdata\data200.json")
@@ -73,9 +79,12 @@ save_dir = "output"
 
 np.savetxt(file_path, Y, fmt="%s")
 
+mpl.use("Agg")
+
 for n in range(len(startPositions)):
     fig, ax = plt.subplots()
-    ax.scatter(startPositions[n]["x"], startPositions[n]["y"], c="black", marker="3")
+    ax.scatter(startPositions[n]["x"],
+               startPositions[n]["y"], c="black", marker="3")
     ax.set_title("")  # (f"Group {n}")
     ax.set_xlabel("")
     ax.set_ylabel("")
@@ -87,7 +96,7 @@ for n in range(len(startPositions)):
     ax.spines["right"].set_visible(False)
     ax.set_xticks([])
     ax.set_yticks([])
-    file_name = f"group_{n+1}.png"
+    file_name = f"group_{n}.png"
     file_path = os.path.join(save_dir, file_name)
     plt.savefig(file_path)
     plt.close(fig)

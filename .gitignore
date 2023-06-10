@@ -1,5 +1,7 @@
 output/
 output/*
+start_positions.json
+settings.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

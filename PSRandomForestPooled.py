@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     starttime = time.time()
 
-    pool = mp.Pool(mp.cpu_count()-1)
+    pool = mp.Pool(mp.cpu_count())
 
     print("Finding optimized parameters...")
     print("---------------")

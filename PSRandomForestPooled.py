@@ -9,7 +9,6 @@ Created on Sun Apr 23 08:46:39 2023
 
 """
 import PSRandomForest as psrf
-
 import time
 from tqdm import tqdm
 
@@ -30,7 +29,7 @@ if __name__ == '__main__':
 
     best_img_size = -1
 
-    results = [pool.apply_async(psrf.randomforest, args=([x, 100]))
+    results = [pool.apply_async(psrf.randomforest, args=([x]))
                for x in range(10, 50)]
     results.append(pool.apply_async(psrf.randomforest, args=([15])))
 

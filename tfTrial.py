@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import skimage
 import tensorflow as tf
-from keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
+from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from keras.models import Sequential
 from PIL import Image
 from sklearn.model_selection import train_test_split
@@ -83,29 +83,30 @@ def PSCNN(filters=64, kernel_size=(4, 4), img_size=100):
     model.add(Conv2D(3, (3, 3),
               input_shape=(img_size, img_size, 4)))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(3, (3, 3)))
+    model.add(Conv2D(3, (3, 3), padding='same', activation='relu'))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(3, (3, 3)))
+    model.add(Conv2D(3, (3, 3), padding='same', activation='relu'))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(3, (3, 3)))
+    model.add(Conv2D(3, (3, 3), padding='same', activation='relu'))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(3, (3, 3)))
+    model.add(Conv2D(3, (3, 3), padding='same', activation='relu'))
+    model.add(MaxPooling2D((2, 2)))
+    model.add(Dropout(0.2))
 
     # Fully Connected Layer: This layer takes the lessons learned from the Convolutional Layer
     # and the smaller feature map form the Pooling Layer and combines them in order to make a prediction.
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
-    model.add(Dense(64, activation='relu'))
-    model.add(Dense(7, activation="softmax"))
+    model.add(Dense(7, activation='softmax'))
 
     psLog.debug("Compiling model...")
     # Compile the model
     model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
-                  optimizer='adam', metrics=['accuracy'])
+                  optimizer='rmsprop', metrics=['accuracy'])
     model.summary()
     # Train the model
     psLog.debug("Training model...")
-    model.fit(X_train, y_train, epochs=100, batch_size=45,
+    model.fit(X_train, y_train, epochs=150, batch_size=32,
               validation_data=(X_test, y_test))
 
     # Evaluate the model

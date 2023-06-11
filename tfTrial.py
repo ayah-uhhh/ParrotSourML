@@ -17,7 +17,8 @@ from PSUtils import IMAGE_DIR, OUT_DIR
 psLog.setLevel(logging.DEBUG)
 
 
-def PSCNN(filters=64, kernel_size=(4, 4), img_size=100):
+def PSCNN(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100):
+    # optimizer = 'nadam', 'rmsprop', 'adam'
     """Import Data"""
 
     pictures = []
@@ -39,33 +40,14 @@ def PSCNN(filters=64, kernel_size=(4, 4), img_size=100):
     X = np.asarray(pictures)
 
     psLog.debug("Converting to binary...")
-    # X = X / 255.0
-
-    # plt.figure(figsize=(img_size, img_size))
-    # for i in range(5):
-    #     plt.subplot(5, 5, i+1)
-    #     plt.xticks([])
-    #     plt.yticks([])
-    #     plt.grid(False)
-    #     plt.imshow(X[i])
-    #     # The CIFAR labels happen to be arrays,
-    #     # which is why you need the extra index
-    #     # plt.xlabel(class_names[train_labels[i][0]])
-    # plt.show()
 
     Y = np.loadtxt(OUT_DIR+"\\Y.txt", dtype=str)
 
-    """
-    one hot encode
-    """
+    # one hot encode
     from keras.utils import to_categorical
     labelmap = {'AZIMUTH': 0, 'RANGE': 1, 'WALL': 2,
                 'LADDER': 3, 'CHAMPAGNE': 4, 'VIC': 5, 'SINGLE': 6}
     Y = np.array(list(map(labelmap.get, Y)))
-    # Y = to_categorical(Y, num_classes=7)
-    """
-    //one hot encode
-    """
 
     psLog.debug("Splitting data...")
     # Split the data into training and testing sets
@@ -80,16 +62,16 @@ def PSCNN(filters=64, kernel_size=(4, 4), img_size=100):
     # and computing the dot product between the filtered weights and the pixel values.
     # The feature map shows what pixels are the most important when classifying an image.
     # Pooling: This layer reduces the size of the feature map  by averaging pixels that are near each other.
-    model.add(Conv2D(3, (3, 3),
+    model.add(Conv2D(filters, kernel_size,
               input_shape=(img_size, img_size, 4)))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(3, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(filters, kernel_size, padding='same', activation='relu'))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(3, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(filters, kernel_size, padding='same', activation='relu'))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(3, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(filters, kernel_size, padding='same', activation='relu'))
     model.add(MaxPooling2D((2, 2)))
-    model.add(Conv2D(3, (3, 3), padding='same', activation='relu'))
+    model.add(Conv2D(filters, kernel_size, padding='same', activation='relu'))
     model.add(MaxPooling2D((2, 2)))
     model.add(Dropout(0.2))
 
@@ -102,16 +84,25 @@ def PSCNN(filters=64, kernel_size=(4, 4), img_size=100):
     psLog.debug("Compiling model...")
     # Compile the model
     model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
-                  optimizer='rmsprop', metrics=['accuracy'])
+                  optimizer=optimizer, metrics=['accuracy'])
     model.summary()
     # Train the model
     psLog.debug("Training model...")
-    model.fit(X_train, y_train, epochs=150, batch_size=32,
-              validation_data=(X_test, y_test))
+    history = model.fit(X_train, y_train, epochs=150, batch_size=32,
+                        validation_data=(X_test, y_test))
+
+    plt.plot(history.history['accuracy'], label='accuracy')
+    plt.plot(history.history['val_accuracy'], label='val_accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.ylim([0.5, 1])
+    plt.legend(loc='lower right')
+    plt.show()
 
     # Evaluate the model
     loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
-    print('Accuracy: %.2f' % (accuracy*100))
+    psLog.debug('Accuracy: %.2f', (accuracy*100))
+    psLog.debug("Loss: %s", loss)
 
 
 PSCNN()

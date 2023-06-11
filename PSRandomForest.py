@@ -17,7 +17,7 @@ from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
-from ParrotSourPreProcessor import IMAGE_DIR, OUT_DIR
+from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 from PSLogger import psLog
 
 
@@ -53,26 +53,13 @@ def randomforest(img_size=30, n_estimators=240, use_pca=False, show_cm=False):
     pictures = []
 
     # read the output image directory to prep the dataset
-    filelist = []
-    for root, dirs, files in os.walk(IMAGE_DIR, topdown=True):
-
-        for n in files:
-            filelist.append(os.path.splitext(n)[0])
-    sorted_files = sorted(filelist, key=int)
-
-    # read the images for form the dataset
-    for name in sorted_files:
-        image = Image.open(os.path.join(root, name)+'.png')
-        resized_image = image.resize((img_size, img_size))
-        image_array = np.array(resized_image).flatten()
-        pictures.append(image_array)
 
     # create the rf classifier
     baseestimator = RandomForestClassifier(n_estimators=n_estimators)
 
     # load the answer key and format the dataset
     Y = np.loadtxt(OUT_DIR+"\\Y.txt", dtype=str)
-    X = np.asarray(pictures)
+    X = get_pics(img_size)
 
     # run optimization if specified
     if (use_pca):

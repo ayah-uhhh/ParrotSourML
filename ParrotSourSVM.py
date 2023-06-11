@@ -12,27 +12,12 @@ from PIL import Image
 from sklearn import metrics, svm
 from sklearn.model_selection import train_test_split
 
-from ParrotSourPreProcessor import IMAGE_DIR, OUT_DIR
+from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 
 
-def psSVM(kernel="linear", sea=1, shape='ovr', show_cm=False):
+def psSVM(kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False,):
 
     start_time = time.time()
-
-    pictures = []
-    filelist = []
-    for root, dirs, files in os.walk(IMAGE_DIR, topdown=True):
-
-        for n in files:
-            filelist.append(os.path.splitext(n)[0])
-
-    sorted_files = sorted(filelist, key=int)
-
-    for name in sorted_files:
-        image = Image.open(os.path.join(root, name)+'.png')
-        resized_image = image.resize((100, 100))
-        image_array = np.array(resized_image).flatten()
-        pictures.append(image_array)
 
     """
     Higher C decreases the amount of misclassified data points in the trainng set
@@ -41,7 +26,7 @@ def psSVM(kernel="linear", sea=1, shape='ovr', show_cm=False):
 
     clf = svm.SVC(kernel=kernel, C=sea, decision_function_shape=shape)
     Y = np.loadtxt(OUT_DIR+'\\Y.txt', dtype=str)
-    X = np.asarray(pictures)
+    X = get_pics(size_img)
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, Y, test_size=0.2, shuffle=False)
@@ -60,4 +45,4 @@ def psSVM(kernel="linear", sea=1, shape='ovr', show_cm=False):
             y_test, predicted)
         disp.figure_.suptitle("Confusion Matrix")
         plt.show()
-    return [[kernel, sea, shape], elapsed_time, error_rate]
+    return [[kernel, sea, shape, size_img], elapsed_time, error_rate]

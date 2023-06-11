@@ -36,12 +36,12 @@ if __name__ == '__main__':
     # Create threads for different img_size values
     # for x in range (10,50) will go through img_size values between 10 and 49
     # and find the best number within that range
-    results = [pool.apply_async(psvm.psSVM, args=(["linear", x]))
-               for x in (10**i for i in range(-2, 3))]
-
-    # Also try 14,15,16,19 as these have historically been the lowest error rates
-    results.extend([pool.apply_async(psvm.psSVM, args=(["rbf", x]))
-                    for x in (10**i for i in range(-2, 3))])
+    results = []
+    for s in range(1, 101):
+        results.extend([pool.apply_async(psvm.psSVM, args=(["linear", x, 'ovr', s]))
+                        for x in (10**i for i in range(-2, 4))])
+        results.extend([pool.apply_async(psvm.psSVM, args=(["rbf", x, 'ovr', s]))
+                        for x in (10**i for i in range(-2, 4))])
 
     pool.close()
 
@@ -69,5 +69,5 @@ if __name__ == '__main__':
 
     # Results:
     psLog.info("Best error rate: %s", least_error)
-    psLog.info("Best img size: %s", best_img_size)
+    psLog.info("Best parameters: %s", best_img_size)
     psLog.info("Total time: %s", total_time)

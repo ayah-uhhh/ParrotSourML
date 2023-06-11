@@ -1,48 +1,60 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Mar 31 11:15:48 2023
-
 @author: ayaha
+
+Diplay histogram /stats analysis of underlying PS data
 """
+import json
+import logging
+import re
+import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.pyplot import *
-import json
-from flatten_json import flatten_json
+import scipy
+from alive_progress import alive_bar
 
-datab = open('\\Users\\ayaha\\OneDrive\\Documents\\MachineLearning\\data1000.json')
-data1000=json.load(datab)
-flat = flatten_json(data1000)
-Y = np.transpose(np.array([]))
+from PSLogger import psLog
+from PSUtils import get_label, load_data
 
+""" IMPORT DATA """
+loaded_data = load_data()
 
-found_label = False
-for key in flat:
-    if '_pic' in key:
-        found_label = True
-        for n in range (0,1000):
-            key = f"{n}_pic"
-            try:
-                val = flat[key]
-                if 'AZIMUTH' in val:
-                    Y = np.append(Y,'AZIMUTH')
-                elif 'RANGE' in val:
-                    Y = np.append(Y,'RANGE')
-                elif 'WALL' in val:
-                    Y = np.append(Y,'WALL')
-                elif 'LADDER' in val:
-                    Y = np.append(Y,'LADDER')
-                elif 'CHAMPAGNE' in val:
-                    Y = np.append(Y,'CHAMPAGNE')
-                elif 'VIC' in val:
-                    Y = np.append(Y,'VIC')
-                elif 'SINGLE' in val:
-                    Y = np.append(Y,'SINGLE')
-            except KeyError:
-                continue
-        if len(Y) == 0:
-            break
-        else:
-            print(Y)
-            break 
-hist(Y,7)
+Y = []
+
+psLog.setLevel(logging.INFO)
+
+# Compute and display the histogram
+with alive_bar(len(loaded_data)) as bar:
+    psLog.info("Generating histogram bins...")
+    for k in loaded_data:
+        # Make the answer key (bins)
+        Y = np.append(Y, get_label(k))
+        bar()
+
+mpl.use("TkAgg")
+hist = plt.hist(Y, 7)
+plt.show()
+
+# Compute and display any labels that occur more than the average
+# (outside of 2 standard deviations)
+deviations = scipy.stats.zscore(hist[0], axis=0)
+
+outliers = []
+n = 0
+MAX_ALLOWED_DEVS = 2
+for x in deviations:
+    if (abs(x) > MAX_ALLOWED_DEVS):
+        outliers.append(n)
+    n += 1
+
+if len(outliers) == 0:
+    psLog.info(u'\u2713' + " Data within 2 standard deviations")
+else:
+    psLog.warning("X Data not within 2 standard deviations")
+    psLog.warning("Outliers: ")
+    for x in outliers:
+        print(labels[x])

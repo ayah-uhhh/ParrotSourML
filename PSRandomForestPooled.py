@@ -2,8 +2,11 @@
 """
 Created on Sun Apr 23 08:46:39 2023
 @author: ayaha
+
+Runs multi-threaded RandomForest predictions to optimize the img_size parameter.
 """
 import logging
+import multiprocessing as mp
 import time
 
 from tqdm import tqdm
@@ -14,35 +17,47 @@ from PSLogger import psLog
 psLog.setLevel(logging.INFO)
 
 if __name__ == '__main__':
-
-    import multiprocessing as mp
-
-    starttime = time.time()
-
-    pool = mp.Pool(mp.cpu_count())
+    # required conditional to avoid recursive multithreading
 
     psLog.info("Finding optimized parameters...")
     psLog.info("---------------")
 
-    least_error = 100
+    starttime = time.time()
 
+    # initialize a thread pool equal to the number of cores available on
+    # this machine
+    pool = mp.Pool(mp.cpu_count())
+
+    # Start with a error rate of 100%; if a RF instance beats this
+    # they become the new best. If an img_size of -1 is the best result,
+    # something went wrong
+    least_error = 100
     best_img_size = -1
 
+    # Create threads for different img_size values
+    # for x in range (10,50) will go through img_size values between 10 and 49
+    # and find the best number within that range
     results = [pool.apply_async(psrf.randomforest, args=([x]))
                for x in range(10, 50)]
-    results.append(pool.apply_async(psrf.randomforest, args=([15])))
+
+    # Also try 14,15,16,19 as these have historically been the lowest error rates
+    results.append(pool.apply_async(
+        psrf.randomforest, args=([14, 15, 16, 19])))
 
     pool.close()
 
+    # get the results after each thread has finished executing
     output = []
     for job in tqdm(results):
         output.append(job.get())
 
+    # find the best img_size (lowest error rate)
     for x in output:
         if (x[2] < least_error):
             least_error = x[2]
             best_img_size = x[0]
 
+        # only in logLevel DEBUG, print all results
         psLog.debug("-----------")
         psLog.debug("Img size: %s", str(x[0]))
         psLog.debug("Error: %s", str(x[2]))
@@ -53,6 +68,7 @@ if __name__ == '__main__':
 
     total_time = time.time() - starttime
 
+    # Results:
     psLog.info("Best error rate: %s", least_error)
     psLog.info("Best img size: %s", best_img_size)
     psLog.info("Total time: %s", total_time)

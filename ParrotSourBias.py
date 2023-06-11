@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Mar 31 11:15:48 2023
-
 @author: ayaha
+
+Diplay histogram /stats analysis of underlying PS data
 """
 import json
+import logging
 import re
 import sys
 
@@ -15,36 +17,30 @@ import pandas as pd
 import scipy
 from alive_progress import alive_bar
 
+from PSLogger import psLog
+from PSUtils import get_label, load_data
+
 """ IMPORT DATA """
-data = open("trainingdata\data1000.json")
-loaded_data = json.load(data)
+loaded_data = load_data()
 
 Y = []
 
+psLog.setLevel(logging.INFO)
 
-def zscore(s):
-    return (s - np.mean(s, axis=0)) / np.std(s, axis=0)
-
-
-labels = ['AZIMUTH', 'RANGE', 'WALL', "LADDER", "CHAMPAGNE", "VIC", "SINGLE"]
-
-"""Extract label information"""
+# Compute and display the histogram
 with alive_bar(len(loaded_data)) as bar:
-    print("Generating histogram bins...")
-    for k in loaded_data:  # pictures
-
-        # Make the answer key
-        if "pic" in k:
-            val = k.get("pic")
-
-            found_label = [label for label in labels if (label in val)][0]
-            Y = np.append(Y, found_label)
-
+    psLog.info("Generating histogram bins...")
+    for k in loaded_data:
+        # Make the answer key (bins)
+        Y = np.append(Y, get_label(k))
         bar()
 
 mpl.use("TkAgg")
 hist = plt.hist(Y, 7)
+plt.show()
 
+# Compute and display any labels that occur more than the average
+# (outside of 2 standard deviations)
 deviations = scipy.stats.zscore(hist[0], axis=0)
 
 outliers = []
@@ -56,10 +52,9 @@ for x in deviations:
     n += 1
 
 if len(outliers) == 0:
-    print(u'\u2713' + " Data within 2 standard deviations")
+    psLog.info(u'\u2713' + " Data within 2 standard deviations")
 else:
-    print("X Data not within 2 standard deviations")
-    print("Outliers: ")
+    psLog.warning("X Data not within 2 standard deviations")
+    psLog.warning("Outliers: ")
     for x in outliers:
         print(labels[x])
-plt.show()

@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     # initialize a thread pool equal to the number of cores available on
     # this machine
-    pool = mp.Pool(mp.cpu_count())
+    pool = mp.Pool(mp.cpu_count(), maxtasksperchild=3)
 
     # Start with a error rate of 100%; if a RF instance beats this
     # they become the new best. If an img_size of -1 is the best result,

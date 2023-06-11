@@ -10,6 +10,7 @@ import multiprocessing as mp
 import time
 
 from tqdm import tqdm
+
 import ParrotSourSVM as psvm
 from PSLogger import psLog
 
@@ -25,7 +26,7 @@ if __name__ == '__main__':
 
     # initialize a thread pool equal to the number of cores available on
     # this machine
-    pool = mp.Pool(mp.cpu_count())
+    pool = mp.Pool(mp.cpu_count(), maxtasksperchild=2)
 
     # Start with a error rate of 100%; if a RF instance beats this
     # they become the new best. If an img_size of -1 is the best result,
@@ -37,7 +38,7 @@ if __name__ == '__main__':
     # for x in range (10,50) will go through img_size values between 10 and 49
     # and find the best number within that range
     results = []
-    for s in range(1, 101):
+    for s in range(10, 20):
         results.extend([pool.apply_async(psvm.psSVM, args=(["linear", x, 'ovr', s]))
                         for x in (10**i for i in range(-2, 4))])
         results.extend([pool.apply_async(psvm.psSVM, args=(["rbf", x, 'ovr', s]))

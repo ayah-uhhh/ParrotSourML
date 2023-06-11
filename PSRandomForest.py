@@ -11,14 +11,11 @@ import time
 
 import matplotlib.pyplot as plt
 import numpy as np
-from alive_progress import alive_bar
 from PIL import Image
-from sklearn import metrics, svm
-from sklearn.datasets import make_classification
+from sklearn import metrics
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree
 
 from ParrotSourPreProcessor import IMAGE_DIR, OUT_DIR
 from PSLogger import psLog

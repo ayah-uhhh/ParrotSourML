@@ -4,8 +4,6 @@ Created on Fri Mar 10 16:47:31 2023
 
 @author: ayaha
 """
-import csv
-import glob
 import json
 import os
 import shutil
@@ -14,11 +12,9 @@ import time
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-from alive_progress import alive_bar
-from PIL import Image
 from tqdm import tqdm
-
-from PSUtils import ANSWER_FILE, IMAGE_DIR, OUT_DIR, get_label, load_data
+from PSLogger import psLog
+from PSUtils import ANSWER_FILE, IMAGE_DIR, OUT_DIR, get_label, load_data 
 
 
 def write_img(start_positions, n):
@@ -77,7 +73,7 @@ if __name__ == '__main__':
 
     n = 0
 
-    print("Generating answer key and dataset...")
+    psLog.info("Generating answer key and dataset...")
     for k in loaded_data:  # pictures
         groups = k.get("groups")
         startPositions[n] = {}
@@ -116,7 +112,7 @@ if __name__ == '__main__':
         job.get()
 
     total_time = time.time() - starttime
-    print("Total time: " + str(total_time))
+    psLog.info("Total time: " + str(total_time))
 
     with open("start_positions.json", "w") as file:  # save data
         json.dump(startPositions, file)

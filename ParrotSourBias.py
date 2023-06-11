@@ -57,4 +57,4 @@ else:
     psLog.warning("X Data not within 2 standard deviations")
     psLog.warning("Outliers: ")
     for x in outliers:
-        print(labels[x])
+        psLog.warning(labels[x])

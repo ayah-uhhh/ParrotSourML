@@ -2,8 +2,9 @@
 
 import json
 import os
-from PIL import Image
+
 import numpy as np
+from PIL import Image
 
 OUT_DIR = "output"
 IMAGE_DIR = OUT_DIR+"\\images"
@@ -12,7 +13,7 @@ LABELS = ['AZIMUTH', 'RANGE', 'WALL',
           "LADDER", "CHAMPAGNE", "VIC", "SINGLE"]
 
 
-def load_data(filename="data1000.json"):
+def load_data(filename="data5000.json"):
     data = open("trainingdata\\"+filename)
     return json.load(data)
 

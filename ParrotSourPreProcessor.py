@@ -4,28 +4,30 @@ Created on Fri Mar 10 16:47:31 2023
 
 @author: ayaha
 """
-from PIL import Image
-from alive_progress import alive_bar
-import os
-import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import json
 import csv
 import glob
+import json
+import os
+import shutil
 import time
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+from alive_progress import alive_bar
+from PIL import Image
 from tqdm import tqdm
 
+OUT_DIR = "output"
+IMAGE_DIR = OUT_DIR+"\\images"
 
-def write_file(startPositions, n):
 
-    # img_size = (500, 500)
-    save_dir = "output"
+def write_file(start_positions, n):
 
     fig, ax = plt.subplots()
-    ax.scatter(startPositions[n]["x"],
-               startPositions[n]["y"], c="black", marker="3")
-    ax.set_title("")  # (f"Group {n}")
+    ax.scatter(start_positions[n]["x"],
+               start_positions[n]["y"], c="black", marker="3")
+    ax.set_title("")
     ax.set_xlabel("")
     ax.set_ylabel("")
     ax.set_xlim(0, 400)
@@ -37,19 +39,9 @@ def write_file(startPositions, n):
     ax.set_xticks([])
     ax.set_yticks([])
     file_name = f"{n}.png"
-    file_path = os.path.join(save_dir, file_name)
+    file_path = os.path.join(IMAGE_DIR, file_name)
     plt.savefig(file_path)
     plt.close(fig)
-
-    # with Image.open(file_path) as img:
-    #     center_x = img.width // 2
-    #     center_y = img.height // 2
-    #     left = max(0, center_x - img_size[0] // 2)
-    #     right = min(img.width, center_x + img_size[0] // 2)
-    #     top = max(0, center_y - img_size[1] // 2)
-    #     bottom = min(img.height, center_y + img_size[1] // 2)
-    #     cropped_img = img.crop((left, top, right, bottom))
-    #     cropped_img.save(file_path)
 
 
 if __name__ == '__main__':
@@ -58,9 +50,7 @@ if __name__ == '__main__':
 
     starttime = time.time()
 
-    files = glob.glob('output/*')
-    for f in files:
-        os.remove(f)
+    shutil.rmtree(OUT_DIR)
 
     """ IMPORT DATA """
     data = open("trainingdata\data1000.json")
@@ -106,10 +96,12 @@ if __name__ == '__main__':
     """ plot for ML """
 
     # Create scatter plots for each n_group
-    file_path = os.path.join("output", "Y.txt")
+    file_path = os.path.join(OUT_DIR, "Y.txt")
 
-    if not os.path.exists("output"):
-        os.makedirs("output")
+    if not os.path.exists(OUT_DIR):
+        os.makedirs(OUT_DIR)
+    if not os.path.exists(IMAGE_DIR):
+        os.makedirs(IMAGE_DIR)
 
     open(file_path, "w+")
     np.savetxt(file_path, Y, fmt="%s")

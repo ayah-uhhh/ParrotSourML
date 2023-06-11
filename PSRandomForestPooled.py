@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
-
 """
-
 Created on Sun Apr 23 08:46:39 2023
-
-
 @author: ayaha
-
 """
-import PSRandomForest as psrf
 import time
+
 from tqdm import tqdm
+
+import PSRandomForest as psrf
 
 debug = False
 
@@ -40,15 +37,15 @@ if __name__ == '__main__':
         output.append(job.get())
 
     for x in output:
+        if (x[2] < least_error):
+            least_error = x[2]
+            best_img_size = x[0]
         if (debug):
             print("-----------")
             print("Img size: " + str(x[0]))
             print("Error: " + str(x[2]))
             print("")
             print("Img size: " + str(x[1]))
-        if (x[2] < least_error):
-            least_error = x[2]
-            best_img_size = x[0]
 
     print("------------------------------")
 

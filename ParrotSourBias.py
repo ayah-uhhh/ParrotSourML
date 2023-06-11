@@ -4,15 +4,16 @@ Created on Fri Mar 31 11:15:48 2023
 
 @author: ayaha
 """
+import json
+import re
+import sys
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import scipy
-import matplotlib as mpl
 from alive_progress import alive_bar
-import json
-import sys
-import re
 
 """ IMPORT DATA """
 data = open("trainingdata\data1000.json")

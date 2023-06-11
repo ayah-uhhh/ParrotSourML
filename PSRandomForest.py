@@ -3,6 +3,7 @@
 Created on Sun Apr 23 08:46:39 2023
 @author: ayaha
 """
+import logging
 import os
 import time
 
@@ -18,9 +19,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 
 from ParrotSourPreProcessor import IMAGE_DIR, OUT_DIR
+from PSLogger import psLog
 
 
-def randomforest(img_size=30, n_estimators=240, use_pca=False, debug=False):
+def randomforest(img_size=30, n_estimators=240, use_pca=False, show_cm=False):
 
     start_time = time.time()
     pictures = []
@@ -58,10 +60,10 @@ def randomforest(img_size=30, n_estimators=240, use_pca=False, debug=False):
 
     error = 1 - metrics.accuracy_score(y_test, predicted)
 
-    if (debug):
-        print("Time taken to classify:", elapsed_time, "seconds")
-        print(f"Classification error: {error}")
+    psLog.debug("Time taken to classify: %s seconds", elapsed_time)
+    psLog.debug(f"Classification error: {error}")
 
+    if show_cm:
         disp = metrics.ConfusionMatrixDisplay.from_predictions(
             y_test, predicted)
         disp.figure_.suptitle("Confusion Matrix")

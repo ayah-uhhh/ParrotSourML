@@ -3,13 +3,15 @@
 Created on Sun Apr 23 08:46:39 2023
 @author: ayaha
 """
+import logging
 import time
 
 from tqdm import tqdm
 
 import PSRandomForest as psrf
+from PSLogger import psLog
 
-debug = False
+psLog.setLevel(logging.INFO)
 
 if __name__ == '__main__':
 
@@ -19,8 +21,8 @@ if __name__ == '__main__':
 
     pool = mp.Pool(mp.cpu_count())
 
-    print("Finding optimized parameters...")
-    print("---------------")
+    psLog.info("Finding optimized parameters...")
+    psLog.info("---------------")
 
     least_error = 100
 
@@ -40,17 +42,17 @@ if __name__ == '__main__':
         if (x[2] < least_error):
             least_error = x[2]
             best_img_size = x[0]
-        if (debug):
-            print("-----------")
-            print("Img size: " + str(x[0]))
-            print("Error: " + str(x[2]))
-            print("")
-            print("Img size: " + str(x[1]))
 
-    print("------------------------------")
+        psLog.debug("-----------")
+        psLog.debug("Img size: %s", str(x[0]))
+        psLog.debug("Error: %s", str(x[2]))
+        psLog.debug("")
+        psLog.debug("Img size: %s", str(x[1]))
+
+    psLog.info("------------------------------")
 
     total_time = time.time() - starttime
 
-    print("Best error rate: ", least_error)
-    print("Best img size: ", best_img_size)
-    print("Total time: " + str(total_time))
+    psLog.info("Best error rate: %s", least_error)
+    psLog.info("Best img size: %s", best_img_size)
+    psLog.info("Total time: %s", total_time)

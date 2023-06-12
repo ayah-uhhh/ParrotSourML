@@ -17,7 +17,7 @@ from PSUtils import IMAGE_DIR, OUT_DIR
 psLog.setLevel(logging.DEBUG)
 
 
-def PSCNN(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100):
+def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100):
     # optimizer = 'nadam', 'rmsprop', 'adam'
     """Import Data"""
 
@@ -105,4 +105,4 @@ def PSCNN(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100):
     psLog.debug("Loss: %s", loss)
 
 
-PSCNN()
+pscnn()

@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 
 
-def psSVM(kernel="rbf", sea=1, shape='ovr', size_img=100, show_cm=False,):
+def psSVM(kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False,):
 
     start_time = time.time()
 
@@ -33,16 +33,6 @@ def psSVM(kernel="rbf", sea=1, shape='ovr', size_img=100, show_cm=False,):
     clf.fit(X_train, y_train)
     predicted = clf.predict(X_test)
 
-    """SAVE SVM"""
-    import joblib
-
-    # save
-    joblib.dump(clf, "PSSVMSaved.py")
-    """
-    To load use the following
-    clf2 = joblib.load("PSSVMSaved.py")
-    clf2.predict(X)
-    """
     error_rate = 1 - metrics.accuracy_score(y_test, predicted)
     end_time = time.time()
     elapsed_time = end_time - start_time

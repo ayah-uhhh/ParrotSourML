@@ -10,6 +10,8 @@ import logging
 
 import PSRandomForest as psrf
 from PSLogger import psLog
+from joblib import dump, load
+import pickle
 
 psLog.setLevel(logging.DEBUG)
 
@@ -18,3 +20,5 @@ psLog.info("------------------------------")
 _, time_elapsed, error = psrf.randomforest(img_size=15, show_cm=True)
 
 psLog.info("------------------------------")
+
+dump(psrf.randomforest(img_size=15, show_cm=True), 'PSRandomForestPickled.py')

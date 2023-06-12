@@ -34,7 +34,7 @@ from numpy import *
 
 
 #     def predict(self, X):
-       
+
 #         y_approximated = dot(X, self.weights) + self.bias
 #         return y_approximated
 
@@ -47,14 +47,14 @@ class LinearRegression:
         self.bias = None
 
     def fit(self, X, y):
-        (n_samples,n_features) = X.shape
+        (n_samples, n_features) = X.shape
         # init parameters
         self.weights = zeros(n_features)
         self.bias = 1
 
         # gradient descent
         for _ in range(self.n_iters):
-            y_predicted = dot(X,self.weights) + self.bias
+            y_predicted = dot(X, self.weights) + self.bias
             # compute gradients
             dw = (1 / n_samples) * dot(X.T, (y_predicted - y))
             db = (1 / n_samples) * sum(y_predicted - y)
@@ -63,8 +63,7 @@ class LinearRegression:
             self.weights -= self.lr * dw
             self.bias -= self.lr * db
 
-
     def predict(self, X):
-       
-        y_approximated = dot(X,self.weights) + self.bias
+
+        y_approximated = dot(X, self.weights) + self.bias
         return y_approximated

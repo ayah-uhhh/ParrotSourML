@@ -13,7 +13,7 @@ LABELS = ['AZIMUTH', 'RANGE', 'WALL',
           "LADDER", "CHAMPAGNE", "VIC", "SINGLE"]
 
 
-def load_data(filename="data5000.json"):
+def load_data(filename="data1000.json"):
     data = open("trainingdata\\"+filename)
     return json.load(data)
 

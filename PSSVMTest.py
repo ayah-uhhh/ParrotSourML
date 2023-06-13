@@ -6,8 +6,8 @@ Created on 10 Jun 2023
 This file runs a single RandomForest prediction with the coded img_size parameter.
 Intended to be run with the best img_size found via the Pooled RF.
 """
-import joblib
-import logging
+
+import pickle
 import numpy as np
 import ParrotSourSVM as psvm
 from PSLogger import psLog
@@ -17,7 +17,9 @@ from sklearn import metrics, svm
 import matplotlib.pyplot as plt
 
 """LOAD MODEL"""
-clf = joblib.load('PSSVMSaved.pkl')
+# clf = pickle.load('PSSVMSaved.pkl')
+with open('PSSVMSaved.pkl', 'rb') as file:
+    clf = pickle.load(file)
 
 start_time = time.time()
 

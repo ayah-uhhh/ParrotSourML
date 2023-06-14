@@ -133,4 +133,3 @@ def preprocess(filename="data1000.json", outdir=OUT_DIR):
 if __name__ == "__main__":
     mp.freeze_support()
     preprocess("data1000.json")
-    preprocess("data50.json", 'predict')

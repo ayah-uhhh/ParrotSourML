@@ -7,6 +7,7 @@ Defines a function to run a single RandomForest prediction with the coded img_si
 """
 import logging
 import multiprocessing as mp
+import os
 import time
 
 import joblib
@@ -36,8 +37,8 @@ if __name__ == '__main__':
 
     psLog.debug("Loading data...")
     start_time = time.time()
-    Y = np.loadtxt('predict'+"\\Y.txt", dtype=str)
-    X = get_pics(img_size, 'predict\\images')
+    Y = np.loadtxt(os.path.join("predict", "Y.txt"), dtype=str)
+    X = get_pics(img_size, os.path.join('predict', 'images'))
     psLog.debug("Loaded data (%.2fs)", time.time()-start_time)
 
     """

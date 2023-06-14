@@ -54,7 +54,7 @@ def randomforest(save=False, img_size=30, n_estimators=240, use_pca=False, show_
     psLog.debug("Loading data...")
     start_time = time.time()
     # load the answer key and format the dataset
-    Y = np.loadtxt(OUT_DIR+"\\Y.txt", dtype=str)
+    Y = np.loadtxt(os.path.join(OUT_DIR, "Y.txt"), dtype=str)
     X = get_pics(img_size)
 
     # run optimization if specified

@@ -41,7 +41,7 @@ def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show
 
     psLog.debug("Converting to binary...")
 
-    Y = np.loadtxt(OUT_DIR+"\\Y.txt", dtype=str)
+    Y = np.loadtxt(os.path.join(OUT_DIR, "Y.txt"), dtype=str)
 
     # one hot encode
     from keras.utils import to_categorical

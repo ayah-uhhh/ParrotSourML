@@ -3,6 +3,7 @@
 Created on Tue Mar 14 22:23:34 2023
 @author: ayaha
 """
+import os
 import time
 
 import joblib
@@ -12,7 +13,7 @@ from sklearn import metrics, svm
 from sklearn.model_selection import train_test_split
 
 from PSLogger import psLog
-from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
+from PSUtils import OUT_DIR, get_pics
 
 
 def psSVM(save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False):
@@ -24,7 +25,7 @@ def psSVM(save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm
 
     start_time = time.time()
     psLog.debug("Loading data...")
-    Y = np.loadtxt(OUT_DIR+'\\Y.txt', dtype=str)
+    Y = np.loadtxt(os.path.join(OUT_DIR, 'Y.txt'), dtype=str)
     X = get_pics(size_img)
 
     X_train, X_test, y_train, y_test = train_test_split(

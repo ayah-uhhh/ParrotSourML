@@ -7,8 +7,8 @@ import numpy as np
 from PIL import Image
 
 OUT_DIR = "output"
-IMAGE_DIR = OUT_DIR+"\\images"
-ANSWER_FILE = OUT_DIR+"\\Y.txt"
+IMAGE_DIR = os.path.join(OUT_DIR, "images")
+ANSWER_FILE = os.path.join(OUT_DIR, "Y.txt")
 LABELS = ['AZIMUTH', 'RANGE', 'WALL',
           "LADDER", "CHAMPAGNE", "VIC", "SINGLE"]
 

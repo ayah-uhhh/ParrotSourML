@@ -6,20 +6,19 @@ Created on 10 Jun 2023
 This file runs a single RandomForest prediction with the coded img_size parameter.
 Intended to be run with the best img_size found via the Pooled RF.
 """
-import joblib
-import pickle
-import numpy as np
-import ParrotSourSVM as psvm
-from PSLogger import psLog
-from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
+import os
 import time
-from sklearn import metrics, svm
-import matplotlib.pyplot as plt
 
+import joblib
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import metrics
+
+from PSUtils import OUT_DIR, get_pics
 
 start_time = time.time()
 
-Y = np.loadtxt(OUT_DIR+'\\Y.txt', dtype=str)
+Y = np.loadtxt(os.path.join(OUT_DIR, 'Y.txt'), dtype=str)
 X = get_pics(100)  # manual image size
 
 """

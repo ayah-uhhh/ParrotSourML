@@ -17,7 +17,7 @@ import numpy as np
 from tqdm import tqdm
 
 from PSLogger import psLog
-from PSUtils import ANSWER_FILE, IMAGE_DIR, OUT_DIR, get_label, load_data
+from PSUtils import OUT_DIR, get_label, load_data
 
 
 def write_img(start_positions, n, outdir=OUT_DIR):
@@ -80,7 +80,7 @@ def preprocess(filename="data1000.json", outdir=OUT_DIR):
 
     n = 0
 
-    psLog.info("Generating answer key and dataset...")
+    psLog.debug("Generating answer key and dataset...")
     for k in loaded_data:  # pictures
         groups = k.get("groups")
         start_positions[n] = {}
@@ -99,7 +99,7 @@ def preprocess(filename="data1000.json", outdir=OUT_DIR):
         Y = np.append(Y, get_label(k))
         n += 1
 
-    psLog.debug('Loaded data. (%.2f)', time.time()-start_time)
+    psLog.debug('Answer key created. (%.2f)', time.time()-start_time)
 
     # Save the answer key
     open(os.path.join(outdir, "Y.txt"), "w+")
@@ -125,7 +125,7 @@ def preprocess(filename="data1000.json", outdir=OUT_DIR):
 
     psLog.debug("Generated images. (%.2f)", time.time()-start_time)
 
-    psLog.info("Total time: %.2f", (time.time()-total_time))
+    psLog.debug("Preprocessing time: %.2f", (time.time()-total_time))
 
     with open("start_positions.json", "w") as file:  # save data
         json.dump(start_positions, file)

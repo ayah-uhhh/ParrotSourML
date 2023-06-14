@@ -28,10 +28,10 @@ if __name__ == '__main__':
 
     total_time = time.time()
 
-    psLog.debug("Generating new images....")
+    psLog.debug("Preprocessing test data...")
     start_time = time.time()
     preprocess('data5000.json', 'predict')
-    psLog.debug('Generated images. (%.2f)', time.time()-start_time)
+    psLog.debug('Test data preprocessed. (%.2f)', time.time()-start_time)
 
     psLog.debug("Loading model...")
     start_time = time.time()

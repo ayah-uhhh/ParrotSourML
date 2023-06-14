@@ -5,6 +5,7 @@ output/*
 predict/
 predict/*
 start_positions.json
+ps_cnn_model.h5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

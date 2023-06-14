@@ -15,11 +15,12 @@ from PSLogger import psLog
 from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 
 
-def psSVM( save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False):
+def psSVM(save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False):
     """
     Higher C decreases the amount of misclassified data points in the trainng set
     but may increase misclassification in test data. C is log
     """
+    total_time = time.time()
 
     start_time = time.time()
     psLog.debug("Loading data...")
@@ -28,13 +29,13 @@ def psSVM( save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_c
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, Y, test_size=0.2, shuffle=False)
-    psLog.debug("Loaded data (%s)", (time.time()-start_time))
+    psLog.debug("Loaded data (%.2fs)", (time.time()-start_time))
 
     clf = svm.SVC(kernel=kernel, C=sea, decision_function_shape=shape)
     psLog.debug("Training model...")
     start_time = time.time()
     clf.fit(X_train, y_train)
-    psLog.debug("Model trained (%s)", (time.time()-start_time))
+    psLog.debug("Model trained (%.2fs)", (time.time()-start_time))
 
     psLog.debug("Verifying accuracy...")
     start_time = time.time()
@@ -42,15 +43,18 @@ def psSVM( save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_c
     error_rate = 1 - metrics.accuracy_score(y_test, predicted)
     elapsed_time = time.time() - start_time
 
-    psLog.debug("Time taken to classify: %s seconds", elapsed_time)
+    psLog.debug("Classification complete. (%.2fs)", elapsed_time)
     psLog.debug(f"Classification error: {error_rate}")
 
-    psLog.debug("Saving model...")
-    start_time = time.time()
     if save:
+        psLog.debug("Saving model...")
+        start_time = time.time()
         model_settings = [kernel, sea, shape, size_img]
         joblib.dump((clf, model_settings), 'PSSVMSaved.jbl')
-    psLog.debug("Model trained (%s)", (time.time()-start_time))
+        psLog.debug("Model saved (%.2fs)", (time.time()-start_time))
+
+    elapsed_time = time.time() - total_time
+    psLog.debug("Total time: %.2fs", time.time()-total_time)
 
     if show_cm:
         disp = metrics.ConfusionMatrixDisplay.from_predictions(

@@ -8,7 +8,7 @@ from PSUtils import IMAGE_DIR
 
 
 def one_hot_encode_labels(answerkey=os.path.join('output', 'Y.txt')):
-    np.loadtxt(answerkey, dtype=str)
+    Y = np.loadtxt(answerkey, dtype=str)
 
     # one hot encode
     labelmap = {'AZIMUTH': 0, 'RANGE': 1, 'WALL': 2,

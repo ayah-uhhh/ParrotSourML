@@ -66,8 +66,8 @@ if __name__ == '__main__':
         psLog.debug("")
         psLog.debug("Img size: %s", str(x[1]))
 
-    psLog.deubg("Saving best svn model...")
-    joblib.dump(forest, 'PSSVMSaved.jbl')
+    psLog.debug("Saving best svn model...")
+    joblib.dump(model, 'PSSVMSaved.jbl')
     psLog.debug("Model saved.")
     psLog.info("------------------------------")
 

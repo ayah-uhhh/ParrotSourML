@@ -29,3 +29,8 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python ParrotSourPreProcessor.py
       - run: python PSRandomForestPooled.py
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: best-rf-model
+          path: PSRandomForestSaved.jbl

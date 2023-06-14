@@ -51,8 +51,8 @@ def randomforest(save=False, img_size=30, n_estimators=240, use_pca=False, show_
     """
     total_time = time.time()
 
-    start_time = time.time()
     psLog.debug("Loading data...")
+    start_time = time.time()
     # load the answer key and format the dataset
     Y = np.loadtxt(OUT_DIR+"\\Y.txt", dtype=str)
     X = get_pics(img_size)
@@ -82,7 +82,7 @@ def randomforest(save=False, img_size=30, n_estimators=240, use_pca=False, show_
     error_rate = 1 - metrics.accuracy_score(y_test, predicted)
 
     psLog.debug("Classification complete. (%.2fs)", time.time()-start_time)
-    psLog.debug(f"Classification error: {error_rate}")
+    psLog.debug("Classification error: %.2f%%", (error_rate*100))
 
     if save:
         psLog.debug("Saving model...")

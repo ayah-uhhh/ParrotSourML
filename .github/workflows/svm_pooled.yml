@@ -31,3 +31,8 @@ jobs:
       - run: python ParrotSourPreProcessor.py
 
       - run: python PSSVMPooled.py
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: best-svm-model
+          path: PSSVMSaved.jbl

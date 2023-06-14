@@ -2,6 +2,8 @@ PSRandomForestSaved.jbl
 PSSVMSaved.jbl
 output/
 output/*
+predict/
+predict/*
 start_positions.json
 
 # Byte-compiled / optimized / DLL files

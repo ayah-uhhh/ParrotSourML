@@ -26,4 +26,4 @@ jobs:
           python-version: "3.9"
           cache: "pip" # caching pip dependencies
       - run: pip install -r requirements.txt
-      - run: python ./ParrotSourPreprocessor.py
+      - run: python ParrotSourPreprocessor.py

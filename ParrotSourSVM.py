@@ -46,10 +46,10 @@ def psSVM(save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm
     psLog.debug("Classification complete. (%.2fs)", elapsed_time)
     psLog.debug(f"Classification error: {error_rate}")
 
+    model_settings = [kernel, sea, shape, size_img]
     if save:
         psLog.debug("Saving model...")
         start_time = time.time()
-        model_settings = [kernel, sea, shape, size_img]
         joblib.dump((clf, model_settings), 'PSSVMSaved.jbl')
         psLog.debug("Model saved (%.2fs)", (time.time()-start_time))
 
@@ -62,4 +62,4 @@ def psSVM(save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm
         disp.figure_.suptitle("Confusion Matrix")
         plt.show()
 
-    return [[kernel, sea, shape, size_img], elapsed_time, error_rate, (clf, model_settings)]
+    return [model_settings, elapsed_time, error_rate, (clf, model_settings)]

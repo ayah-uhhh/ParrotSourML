@@ -10,7 +10,7 @@ on:
     branches: [main]
 
 jobs:
-  svm:
+  cnn:
     runs-on: ubuntu-latest
 
     strategy:

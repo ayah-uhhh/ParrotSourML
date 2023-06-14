@@ -10,7 +10,7 @@ on:
     branches: [main]
 
 jobs:
-  svm:
+  svm_pool:
     runs-on: ubuntu-latest
 
     strategy:

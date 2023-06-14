@@ -28,27 +28,25 @@ if __name__ == '__main__':
 
     total_time = time.time()
 
-    img_size = 15
-
     psLog.debug("Generating new images....")
     start_time = time.time()
     preprocess('data50.json', 'predict')
     psLog.debug('Generated images. (%.2f)', time.time()-start_time)
 
-    psLog.debug("Loading data...")
+    psLog.debug("Loading model...")
+    start_time = time.time()
+    loaded_model, img_size = joblib.load(open('PSRandomForestSaved.jbl', 'rb'))
+    forest = loaded_model
+    psLog.debug("Loaded model. (%.2fs)", time.time()-start_time)
+
+    # Data must be read after loading model due to reliance on img_size from previous saved
+    # model. In the event of a pooled run, we need to capture the config from the saved file
+    # since we cannot guarantee the same result for each run
+    psLog.debug("Reading data...")
     start_time = time.time()
     Y = np.loadtxt(os.path.join("predict", "Y.txt"), dtype=str)
     X = get_pics(img_size, os.path.join('predict', 'images'))
     psLog.debug("Loaded data (%.2fs)", time.time()-start_time)
-
-    """
-    LOAD MODEL
-    """
-    psLog.debug("Loading model...")
-    start_time = time.time()
-    loaded_model = joblib.load(open('PSRandomForestSaved.jbl', 'rb'))
-    forest = loaded_model
-    psLog.debug("Loaded model. (%.2fs)", time.time()-start_time)
 
     # predict based on test data
     psLog.debug("Classifying...")

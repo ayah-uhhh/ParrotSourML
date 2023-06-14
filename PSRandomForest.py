@@ -87,7 +87,7 @@ def randomforest(save=False, img_size=30, n_estimators=240, use_pca=False, show_
     if save:
         psLog.debug("Saving model...")
         start_time = time.time()
-        joblib.dump(forest, 'PSRandomForestSaved.jbl')
+        joblib.dump((forest, img_size), 'PSRandomForestSaved.jbl')
         psLog.debug("Model saved (%.2fs)", (time.time()-start_time))
 
     elapsed_time = time.time()-total_time

@@ -67,7 +67,7 @@ if __name__ == '__main__':
         psLog.debug("Img size: %s", str(x[1]))
 
     psLog.debug("Saving best forest model...")
-    joblib.dump(forest, 'PSRandomForestSaved.jbl')
+    joblib.dump((forest, best_img_size), 'PSRandomForestSaved.jbl')
     psLog.debug("Model saved.")
     psLog.info("------------------------------")
 

@@ -1,4 +1,4 @@
-name: "Preprocessor"
+name: "ParrotSourML Jobs"
 
 on:
   push:

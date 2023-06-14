@@ -1,10 +1,10 @@
 """tf trial"""
 import logging
 import os
+import time
 
 import matplotlib.pyplot as plt
 import numpy as np
-import skimage
 import tensorflow as tf
 from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from keras.models import Sequential

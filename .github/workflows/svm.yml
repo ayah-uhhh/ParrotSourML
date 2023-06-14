@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, cache/restore them, and build using node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Python Test
+name: PS_SVM
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  svm:
     runs-on: ubuntu-latest
 
     strategy:
@@ -27,4 +27,4 @@ jobs:
           cache: "pip" # caching pip dependencies
       - run: pip install -r requirements.txt
       - run: python ./ParrotSourPreprocessor.py
-      - run: python ./PSRandomForestRunner.py
+      - run: python ./PSSVMRunner.py

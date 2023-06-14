@@ -30,7 +30,9 @@ jobs:
 
       - run: python ParrotSourPreProcessor.py
 
-      - run: python PSSVMPooled.py 10 100
+      # note: should limit to 10 as the time required increases exponentially with wider ranges
+      - run: python PSSVMPooled.py 10 20
+      - run: python PSSVMPooled.py 95 105
 
       - uses: actions/upload-artifact@v3
         with:

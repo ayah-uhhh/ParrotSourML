@@ -1,6 +1,8 @@
 name: "Preprocessor"
 
-on: workflow_call
+on:
+  push:
+    branches: [main]
 
 jobs:
   runners:

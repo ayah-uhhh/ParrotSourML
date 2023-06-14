@@ -8,6 +8,7 @@ Defines a function to run a single RandomForest prediction with the coded img_si
 import logging
 import os
 import time
+
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,11 +18,11 @@ from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
-from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 from PSLogger import psLog
+from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 
 
-def randomforest(img_size=30, n_estimators=240, use_pca=False, show_cm=False, save=False):
+def randomforest(save=False, img_size=30, n_estimators=240, use_pca=False, show_cm=False):
     """
     Run sklearn random forest model training and prediction.
 
@@ -92,4 +93,4 @@ def randomforest(img_size=30, n_estimators=240, use_pca=False, show_cm=False, sa
         disp.figure_.suptitle("Confusion Matrix")
         plt.show()
 
-    return [img_size, elapsed_time, error_rate]
+    return [img_size, elapsed_time, error_rate, forest]

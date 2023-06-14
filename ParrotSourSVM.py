@@ -15,7 +15,7 @@ from PSLogger import psLog
 from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 
 
-def psSVM(kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False, save=False):
+def psSVM( save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False):
     """
     Higher C decreases the amount of misclassified data points in the trainng set
     but may increase misclassification in test data. C is log
@@ -58,4 +58,4 @@ def psSVM(kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False, save
         disp.figure_.suptitle("Confusion Matrix")
         plt.show()
 
-    return [[kernel, sea, shape, size_img], elapsed_time, error_rate]
+    return [[kernel, sea, shape, size_img], elapsed_time, error_rate, (clf, model_settings)]

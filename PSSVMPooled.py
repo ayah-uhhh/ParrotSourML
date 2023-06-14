@@ -39,9 +39,9 @@ if __name__ == '__main__':
     # and find the best number within that range
     results = []
     for s in range(10, 20):
-        results.extend([pool.apply_async(psvm.psSVM, args=(["linear", x, 'ovr', s]))
+        results.extend([pool.apply_async(psvm.psSVM, args=([False, "linear", x, 'ovr', s]))
                         for x in (10**i for i in range(-2, 4))])
-        results.extend([pool.apply_async(psvm.psSVM, args=(["rbf", x, 'ovr', s]))
+        results.extend([pool.apply_async(psvm.psSVM, args=([False, "rbf", x, 'ovr', s]))
                         for x in (10**i for i in range(-2, 4))])
 
     pool.close()
@@ -56,6 +56,7 @@ if __name__ == '__main__':
         if (x[2] < least_error):
             least_error = x[2]
             best_img_size = x[0]
+            model = x[3]
 
         # only in logLevel DEBUG, print all results
         psLog.debug("-----------")
@@ -64,6 +65,9 @@ if __name__ == '__main__':
         psLog.debug("")
         psLog.debug("Img size: %s", str(x[1]))
 
+    psLog.deubg("Saving best svn model...")
+    joblib.dump(forest, 'PSSVMSaved.jbl')
+    psLog.debug("Model saved.")
     psLog.info("------------------------------")
 
     total_time = time.time() - starttime

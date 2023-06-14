@@ -14,7 +14,7 @@ LABELS = ['AZIMUTH', 'RANGE', 'WALL',
 
 
 def load_data(filename="data1000.json"):
-    data = open("trainingdata\\"+filename)
+    data = open(os.path.join("trainingdata", filename))
     return json.load(data)
 
 

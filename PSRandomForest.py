@@ -8,7 +8,7 @@ Defines a function to run a single RandomForest prediction with the coded img_si
 import logging
 import os
 import time
-
+import joblib
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
@@ -21,7 +21,7 @@ from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 from PSLogger import psLog
 
 
-def randomforest(img_size=30, n_estimators=240, use_pca=False, show_cm=False):
+def randomforest(img_size=30, n_estimators=240, use_pca=False, show_cm=False, save=False):
     """
     Run sklearn random forest model training and prediction.
 
@@ -55,7 +55,7 @@ def randomforest(img_size=30, n_estimators=240, use_pca=False, show_cm=False):
     # read the output image directory to prep the dataset
 
     # create the rf classifier
-    baseestimator = RandomForestClassifier(n_estimators=n_estimators)
+    forest = RandomForestClassifier(n_estimators=n_estimators)
 
     # load the answer key and format the dataset
     Y = np.loadtxt(OUT_DIR+"\\Y.txt", dtype=str)
@@ -70,10 +70,13 @@ def randomforest(img_size=30, n_estimators=240, use_pca=False, show_cm=False):
     # train the model
     x_train, x_test, y_train, y_test = train_test_split(
         X, Y, test_size=0.2, shuffle=False)
-    baseestimator.fit(x_train, y_train)
+    forest.fit(x_train, y_train)
+
+    if save:
+        joblib.dump(forest, 'PSRandomForestSaved.jbl')
 
     # predict based on test data
-    predicted = baseestimator.predict(x_test)
+    predicted = forest.predict(x_test)
 
     # Results:
     elapsed_time = time.time() - start_time

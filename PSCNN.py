@@ -18,7 +18,7 @@ from PSUtils import IMAGE_DIR, OUT_DIR
 psLog.setLevel(logging.DEBUG)
 
 
-def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False, img_dir=IMAGE_DIR):
+def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False):
     # optimizer = 'nadam', 'rmsprop', 'adam'
     """Import Data"""
 

@@ -31,6 +31,7 @@ jobs:
       - run: python PSRandomForestPooled.py
 
       - uses: actions/upload-artifact@v3
+        name: Upload RF Model
         with:
           name: best-rf-model
           path: PSRandomForestSaved.jbl

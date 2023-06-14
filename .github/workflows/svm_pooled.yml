@@ -34,6 +34,7 @@ jobs:
       - run: python PSSVMPooled.py 12 17
 
       - uses: actions/upload-artifact@v3
+        name: Upload SVM Model
         with:
           name: best-svm-model
           path: PSSVMSaved.jbl

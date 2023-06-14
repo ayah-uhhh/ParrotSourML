@@ -39,8 +39,7 @@ if __name__ == "__main__":
         open('PSSVMSaved.jbl', 'rb'))
     clf = loaded_model
     kernel, sea, shape, size_img = loaded_model_settings
-    print("kernel =", kernel, "Sea =", sea,
-          "shape =", shape, "size image =", size_img)
+
     psLog.debug("Loaded model. (%.2fs)", time.time()-start_time)
     psLog.debug("  - Kernel: %s", kernel)
     psLog.debug("  - C: %s", sea)
@@ -66,8 +65,8 @@ if __name__ == "__main__":
     psLog.debug("Classification complete. (%.2f)", elapsed_time)
     psLog.debug("Classification error: %.2f%%", (error_rate*100))
 
-    mpl.use("TkAgg")
-    disp = metrics.ConfusionMatrixDisplay.from_predictions(
-        Y, predicted)
-    disp.figure_.suptitle("Confusion Matrix")
-    plt.show()
+    # mpl.use("TkAgg")
+    # disp = metrics.ConfusionMatrixDisplay.from_predictions(
+    #     Y, predicted)
+    # disp.figure_.suptitle("Confusion Matrix")
+    # plt.show()

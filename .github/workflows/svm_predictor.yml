@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  random_forest_predictor:
+  svm_predictor:
     runs-on: ubuntu-latest
 
     strategy:
@@ -25,7 +25,7 @@ jobs:
           cache-dependency-path: "**/requirements.txt"
       - run: pip install -r requirements.txt
 
-      - name: Download artifact
+      - name: Download saved SVM model
         id: download-artifact
         uses: dawidd6/action-download-artifact@v2
         with:

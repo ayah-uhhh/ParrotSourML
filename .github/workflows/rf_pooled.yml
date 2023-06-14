@@ -5,9 +5,9 @@ name: Random Forest Pooled
 
 on:
   push:
-    branches: [main, dev]
+    branches: [dev]
   pull_request:
-    branches: [main]
+    branches: [dev]
 
 jobs:
   random_forest_pool:

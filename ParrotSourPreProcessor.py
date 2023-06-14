@@ -8,6 +8,7 @@ import json
 import multiprocessing as mp
 import os
 import shutil
+import sys
 import time
 
 import matplotlib as mpl
@@ -130,6 +131,10 @@ def preprocess(filename="data1000.json", outdir=OUT_DIR):
         json.dump(start_positions, file)
 
 
+filename = 'data1000.json'
+if (len(sys.argv) > 1):
+    filename = sys.argv[1]
+
 if __name__ == "__main__":
     mp.freeze_support()
-    preprocess("data1000.json")
+    preprocess(filename)

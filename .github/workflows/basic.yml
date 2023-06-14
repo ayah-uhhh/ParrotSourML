@@ -1,0 +1,21 @@
+on:
+  push:
+    branches: [main]
+
+jobs:
+  preprocessor:
+    uses: ./.github/workflows/preprocessor.yml
+
+  random_forest:
+    runs-on: ubuntu-latest
+    name: "Random Forest Runner"
+    needs: [preprocessor]
+    steps:
+      - run: python PSRandomForestRunner.py
+
+  svm:
+    runs-on: ubuntu-latest
+    name: "SVM Runner"
+    needs: [preprocessor]
+    steps:
+      - run: python PSSVMRunner.py

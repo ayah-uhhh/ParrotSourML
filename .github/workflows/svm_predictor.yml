@@ -1,16 +1,13 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, and build using node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: SVM Pooled
+name: "SVM Prediction Test"
 
 on:
-  push:
-    branches: [main, dev]
-  pull_request:
-    branches: [main]
+  workflow_run:
+    workflows: [SVM Pooled]
+    types:
+      - completed
 
 jobs:
-  svm_pool:
+  random_forest_predictor:
     runs-on: ubuntu-latest
 
     strategy:
@@ -28,11 +25,13 @@ jobs:
           cache-dependency-path: "**/requirements.txt"
       - run: pip install -r requirements.txt
 
-      - run: python ParrotSourPreProcessor.py
-
-      - run: python PSSVMPooled.py 10 100
-
-      - uses: actions/upload-artifact@v3
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v2
         with:
           name: best-svm-model
-          path: PSSVMSaved.jbl
+          workflow: svm_pooled.yml
+          workflow_conclusion: success
+          run_id: ${{ github.event.workflow_run.id }}
+
+      - run: python PSSVMTest.py

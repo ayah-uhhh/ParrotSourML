@@ -1,16 +1,16 @@
 # This workflow will do a clean install of node dependencies, cache/restore them, and build using node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: RandomForest Pooled
+name: Random Forest Pooled
 
 on:
   push:
-    branches: [dev]
+    branches: [main, dev]
   pull_request:
     branches: [main]
 
 jobs:
-  random_forest_poolee:
+  random_forest_pool:
     runs-on: ubuntu-latest
 
     strategy:
@@ -25,6 +25,7 @@ jobs:
         with:
           python-version: "3.9"
           cache: "pip" # caching pip dependencies
+          cache-dependency-path: "**/requirements.txt"
       - run: pip install -r requirements.txt
-      - run: python ./ParrotSourPreprocessor.py
-      - run: python ./PSRandomForestPooled.py
+      - run: python ParrotSourPreProcessor.py
+      - run: python PSRandomForestPooled.py

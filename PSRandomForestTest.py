@@ -60,8 +60,8 @@ if __name__ == '__main__':
     psLog.debug("Classification complete. (%.2fs)", elapsed_time)
     psLog.debug("Classification error: %.2f%%", (error_rate*100))
 
-    mpl.use("TkAgg")
-    disp = metrics.ConfusionMatrixDisplay.from_predictions(
-        Y, predicted)
-    disp.figure_.suptitle("Confusion Matrix")
-    plt.show()
+    # mpl.use("TkAgg")
+    # disp = metrics.ConfusionMatrixDisplay.from_predictions(
+    #     Y, predicted)
+    # disp.figure_.suptitle("Confusion Matrix")
+    # plt.show()

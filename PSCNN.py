@@ -17,7 +17,7 @@ from PSUtils import IMAGE_DIR, OUT_DIR
 psLog.setLevel(logging.DEBUG)
 
 
-def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100):
+def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False):
     # optimizer = 'nadam', 'rmsprop', 'adam'
     """Import Data"""
 
@@ -91,13 +91,14 @@ def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100):
     history = model.fit(X_train, y_train, epochs=150, batch_size=32,
                         validation_data=(X_test, y_test))
 
-    plt.plot(history.history['accuracy'], label='accuracy')
-    plt.plot(history.history['val_accuracy'], label='val_accuracy')
-    plt.xlabel('Epoch')
-    plt.ylabel('Accuracy')
-    plt.ylim([0.5, 1])
-    plt.legend(loc='lower right')
-    plt.show()
+    if (show_chart):
+        plt.plot(history.history['accuracy'], label='accuracy')
+        plt.plot(history.history['val_accuracy'], label='val_accuracy')
+        plt.xlabel('Epoch')
+        plt.ylabel('Accuracy')
+        plt.ylim([0.5, 1])
+        plt.legend(loc='lower right')
+        plt.show()
 
     # Evaluate the model
     loss, accuracy = model.evaluate(X_test, y_test, verbose=0)

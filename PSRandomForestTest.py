@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     psLog.debug("Generating new images....")
     start_time = time.time()
-    preprocess('data50.json', 'predict')
+    preprocess('data5000.json', 'predict')
     psLog.debug('Generated images. (%.2f)', time.time()-start_time)
 
     psLog.debug("Loading model...")

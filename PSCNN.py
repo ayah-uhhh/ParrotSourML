@@ -102,6 +102,12 @@ def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show
 
     # Evaluate the model
     loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+
+    psLog.debug("Saving model...")
+    start_time = time.time()
+    model.save('ps_cnn_model.h5')
+    psLog.debug("Saved model (%.2fs)", time.time()-start_time)
+
     psLog.debug('Accuracy: %.2f', (accuracy*100))
     psLog.debug("Loss: %s", loss)
 

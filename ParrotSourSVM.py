@@ -3,19 +3,18 @@
 Created on Tue Mar 14 22:23:34 2023
 @author: ayaha
 """
-import os
+import joblib
 import time
 from PSLogger import psLog
 import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
 from sklearn import metrics, svm
 from sklearn.model_selection import train_test_split
 
 from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 
 
-def psSVM(kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False,):
+def psSVM(kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False, save=False):
 
     start_time = time.time()
 
@@ -31,6 +30,11 @@ def psSVM(kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False,):
     X_train, X_test, y_train, y_test = train_test_split(
         X, Y, test_size=0.2, shuffle=False)
     clf.fit(X_train, y_train)
+
+    if save:
+        model_settings = [kernel, sea, shape, size_img]
+        joblib.dump((clf, model_settings), 'PSSVMSaved.jbl')
+
     predicted = clf.predict(X_test)
 
     error_rate = 1 - metrics.accuracy_score(y_test, predicted)

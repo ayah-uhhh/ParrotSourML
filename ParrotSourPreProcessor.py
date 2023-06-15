@@ -5,19 +5,22 @@ Created on Fri Mar 10 16:47:31 2023
 @author: ayaha
 """
 import json
+import multiprocessing as mp
 import os
 import shutil
+import sys
 import time
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
+
 from PSLogger import psLog
-from PSUtils import ANSWER_FILE, IMAGE_DIR, OUT_DIR, get_label, load_data 
+from PSUtils import OUT_DIR, get_label, load_data
 
 
-def write_img(start_positions, n):
+def write_img(start_positions, n, outdir=OUT_DIR):
     """
     Plot and output a start_position image for the Nth picture
     Parameters
@@ -28,7 +31,6 @@ def write_img(start_positions, n):
     n : int
         The picture for which to generate an image
     """
-
     fig, ax = plt.subplots()
     ax.scatter(start_positions[n]["x"],
                start_positions[n]["y"], c="black", marker="3")
@@ -44,56 +46,64 @@ def write_img(start_positions, n):
     ax.set_xticks([])
     ax.set_yticks([])
     file_name = f"{n}.png"
-    file_path = os.path.join(IMAGE_DIR, file_name)
+    file_path = os.path.join(outdir, "images", file_name)
     plt.savefig(file_path)
     plt.close(fig)
 
 
-if __name__ == '__main__':
-
-    import multiprocessing as mp
-
-    starttime = time.time()
-
+def clean_dirs(outdir):
     # Clean and prepare output directories
-    if os.path.exists(OUT_DIR):
-        shutil.rmtree(OUT_DIR)
-    if not os.path.exists(OUT_DIR):
-        os.makedirs(OUT_DIR)
-    if not os.path.exists(IMAGE_DIR):
-        os.makedirs(IMAGE_DIR)
+    if os.path.exists(outdir):
+        shutil.rmtree(outdir)
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+    if not os.path.exists(os.path.join(outdir, "images")):
+        os.makedirs(os.path.join(outdir, "images"))
+
+
+def preprocess(filename="data1000.json", outdir=OUT_DIR):
+    mp.freeze_support()
+
+    total_time = time.time()
+
+    clean_dirs(outdir)
 
     """ IMPORT DATA """
-    loaded_data = load_data()
+    psLog.debug("Loading PS data...")
+    start_time = time.time()
+    loaded_data = load_data(filename)
 
     """Extract numerical information"""
     Y = np.transpose(np.array([]))
 
-    startPositions = {}
+    start_positions = {}
 
     n = 0
 
-    psLog.info("Generating answer key and dataset...")
+    psLog.debug("Generating answer key and dataset...")
     for k in loaded_data:  # pictures
         groups = k.get("groups")
-        startPositions[n] = {}
+        start_positions[n] = {}
         newx = []
         newy = []
         for i in range(len(groups)):  # group number in pictures
-            for j in range(0, len(groups[i])):  # individual points in groups
-                startPos = groups[i][j].get("startPos")
-                newx.append(startPos.get("x"))
-                newy.append(startPos.get("y"))
-            startPositions[n]["x"] = newx
-            startPositions[n]["y"] = newy
+            # individual points in groups
+            for j in range(0, len(groups[i])):
+                start_pos = groups[i][j].get("startPos")
+                newx.append(start_pos.get("x"))
+                newy.append(start_pos.get("y"))
+            start_positions[n]["x"] = newx
+            start_positions[n]["y"] = newy
 
         # Make the answer key
         Y = np.append(Y, get_label(k))
         n += 1
 
+    psLog.debug('Answer key created. (%.2f)', time.time()-start_time)
+
     # Save the answer key
-    open(ANSWER_FILE, "w+")
-    np.savetxt(ANSWER_FILE, Y, fmt="%s")
+    open(os.path.join(outdir, "Y.txt"), "w+")
+    np.savetxt(os.path.join(outdir, "Y.txt"), Y, fmt="%s")
 
     # Create scatter plots for each n_group
     mpl.use("Agg")
@@ -102,17 +112,29 @@ if __name__ == '__main__':
     # to write image files
     pool = mp.Pool(mp.cpu_count())
 
+    psLog.debug("Generating images...")
+    start_time = time.time()
     # Create images for each data row in the dataset
-    results = [pool.apply_async(write_img, args=([startPositions, n]))
-               for n in range(len(startPositions))]
+    results = [pool.apply_async(write_img, args=([start_positions, n, outdir]))
+               for n in range(len(start_positions))]
     pool.close()
 
     # Required to track progress and get results
     for job in tqdm(results):
         job.get()
 
-    total_time = time.time() - starttime
-    psLog.info("Total time: " + str(total_time))
+    psLog.debug("Generated images. (%.2f)", time.time()-start_time)
+
+    psLog.debug("Preprocessing time: %.2f", (time.time()-total_time))
 
     with open("start_positions.json", "w") as file:  # save data
-        json.dump(startPositions, file)
+        json.dump(start_positions, file)
+
+
+filename = 'data1000.json'
+if (len(sys.argv) > 1):
+    filename = sys.argv[1]
+
+if __name__ == "__main__":
+    mp.freeze_support()
+    preprocess(filename)

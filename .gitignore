@@ -2,7 +2,12 @@ PSRandomForestSaved.jbl
 PSSVMSaved.jbl
 output/
 output/*
+predict/
+predict/*
+predictsingle/
+predictsingle/*
 start_positions.json
+ps_cnn_model.h5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

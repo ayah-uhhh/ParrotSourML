@@ -9,6 +9,7 @@ import logging
 import multiprocessing as mp
 import time
 
+import joblib
 from tqdm import tqdm
 
 import PSRandomForest as psrf
@@ -37,12 +38,12 @@ if __name__ == '__main__':
     # Create threads for different img_size values
     # for x in range (10,50) will go through img_size values between 10 and 49
     # and find the best number within that range
-    results = [pool.apply_async(psrf.randomforest, args=([x]))
+    results = [pool.apply_async(psrf.randomforest, args=([False, x]))
                for x in range(10, 25)]
 
     # Also try 14,15,16,19 as these have historically been the lowest error rates
     results.extend([pool.apply_async(
-        psrf.randomforest, args=([x])) for x in [14, 15, 16, 19]])
+        psrf.randomforest, args=([False, x])) for x in [14, 15, 16, 19]])
 
     pool.close()
 
@@ -56,6 +57,7 @@ if __name__ == '__main__':
         if (x[2] < least_error):
             least_error = x[2]
             best_img_size = x[0]
+            forest = x[3]
 
         # only in logLevel DEBUG, print all results
         psLog.debug("-----------")
@@ -64,6 +66,9 @@ if __name__ == '__main__':
         psLog.debug("")
         psLog.debug("Img size: %s", str(x[1]))
 
+    psLog.debug("Saving best forest model...")
+    joblib.dump((forest, best_img_size), 'PSRandomForestSaved.jbl')
+    psLog.debug("Model saved.")
     psLog.info("------------------------------")
 
     total_time = time.time() - starttime

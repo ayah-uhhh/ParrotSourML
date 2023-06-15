@@ -1,9 +1,8 @@
 - Consider pooled CNN
-  -- Workflow on gitlab to run large dataset (25k) with different parameter values
-- Save / load trained RF / SVM
-- Save / load trained CNN??
 - Have models consider blue position
     -- Preprocess to have images translated so that blue is always in the EAST
 
 - Run n predictions using n models (RF, SVM, CNN) and weight votes on a single ps datapoint (no answer key)
 - Set up local test to ingest single data point for above^^ 
+  -- ingest data not file
+- Confidence intervals??

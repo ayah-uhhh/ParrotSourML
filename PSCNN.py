@@ -1,10 +1,8 @@
 """tf trial"""
 import logging
-import os
 import time
 
 import matplotlib.pyplot as plt
-import numpy as np
 import tensorflow as tf
 from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from keras.models import Sequential
@@ -13,7 +11,7 @@ from sklearn.model_selection import train_test_split
 
 from PSCNNUtils import get_cnn_pics, one_hot_encode_labels
 from PSLogger import psLog
-from PSUtils import IMAGE_DIR, OUT_DIR
+
 
 psLog.setLevel(logging.DEBUG)
 

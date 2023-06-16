@@ -3,7 +3,7 @@
 Created on Sun Apr 23 08:46:39 2023
 @author: ayaha
 
-Defines a function to run a single RandomForest prediction with the coded img_size parameter.
+Defines a function to run a single CNN prediction with the coded img_size parameter.
 """
 import logging
 import multiprocessing as mp

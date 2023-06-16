@@ -2,7 +2,8 @@
 - Have models consider blue position
     -- Preprocess to have images translated so that blue is always in the EAST
 
-- Run n predictions using n models (RF, SVM, CNN) and weight votes on a single ps datapoint (no answer key) (Ayah :)
+-  Run n predictions using n models (RF, SVM, CNN) and weight votes on a single ps datapoint (no answer key) (Ayah :)
+    -- Decide between stacking and weighted average
 - Set up local test to ingest single data point for above^^ 
-  -- ingest data not file
+    -- ingest data not file
 - Confidence intervals??

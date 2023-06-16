@@ -18,7 +18,7 @@ from PSUtils import IMAGE_DIR, OUT_DIR
 psLog.setLevel(logging.DEBUG)
 
 
-def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False):
+def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False, save=False):
     # optimizer = 'nadam', 'rmsprop', 'adam'
     """Import Data"""
 
@@ -70,9 +70,11 @@ def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show
     model.summary()
     # Train the model
     psLog.debug("Training model...")
-    history = model.fit(X_train, y_train, epochs=150, batch_size=32,
+    history = model.fit(X_train, y_train, epochs=10, batch_size=20,
                         validation_data=(X_test, y_test))
     psLog.debug("Model trained. (%.2f)", time.time()-start_time)
+
+    elapsed_time = time.time()-start_time
 
     if (show_chart):
         plt.plot(history.history['accuracy'], label='accuracy')
@@ -86,13 +88,16 @@ def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show
     # Evaluate the model
     loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
 
-    psLog.debug("Saving model...")
-    start_time = time.time()
-    model.save('ps_cnn_model.h5')
-    psLog.debug("Saved model (%.2fs)", time.time()-start_time)
+    if save:
+        psLog.debug("Saving model...")
+        start_time = time.time()
+        model.save('ps_cnn_model.h5')
+        psLog.debug("Saved model (%.2fs)", time.time()-start_time)
 
     psLog.debug('Accuracy: %.2f', (accuracy*100))
     psLog.debug("Loss: %s", loss)
+
+    return [img_size, elapsed_time, loss, accuracy, model.summary()]
 
 
 pscnn()

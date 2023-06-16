@@ -25,6 +25,6 @@ jobs:
         name: Upload RF Model
         with:
           name: best-cnn-model
-          path: CNNSaved.jbl
+          path: ps_cnn_model_2.h5
 
   

@@ -16,7 +16,7 @@ from PSLogger import psLog
 psLog.setLevel(logging.DEBUG)
 
 
-def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False, save=False):
+def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False, save=False, epochs=150, batch_size=32):
     # optimizer = 'nadam', 'rmsprop', 'adam'
     """Import Data"""
 
@@ -68,7 +68,7 @@ def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show
     model.summary()
     # Train the model
     psLog.debug("Training model...")
-    history = model.fit(X_train, y_train, epochs=10, batch_size=20,
+    history = model.fit(X_train, y_train, epochs, batch_size,
                         validation_data=(X_test, y_test))
     psLog.debug("Model trained. (%.2f)", time.time()-start_time)
 

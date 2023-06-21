@@ -30,11 +30,11 @@ if __name__ == '__main__':
     # Create threads for different optimizers, filters, kernel sizes and img_size values
     # this will find the best number within each range
     optimizer = ['rmsprop', 'nadam', 'adam']
-    for i in range(2):
+    for i in range(1):
         for j in range(1, 21):
-            for l in range(10, 101, 10):
+            for l in range(10, 110, 10):
                 results = [pool.apply_async(
-                    pscnn.pscnn(epochs=10, batch_size=20), args=([optimizer[i], j, (j, j), l]))]
+                    pscnn.pscnn(epochs=1, batch_size=1), args=([optimizer[i], j, (j, j), l]))]
 
     pool.close()
 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         psLog.debug("Img size: %s", str(x[1]))
 
     psLog.debug("Saving best CNN model...")
-    pscnn.pscnn.save((news, best_img_size), 'ps_cnn_model_2.h5')
+    pscnn.pscnn.model.save((news, best_img_size), 'ps_cnn_model_2.h5')
     psLog.debug("Model saved.")
     psLog.info("------------------------------")
 

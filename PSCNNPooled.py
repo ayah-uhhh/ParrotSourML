@@ -24,17 +24,18 @@ if __name__ == '__main__':
     # Start with a error rate of 100%; if a RF instance beats this
     # they become the new best. If an img_size of -1 is the best result,
     # something went wrong
-    least_error = 100
+    best_accuracy = 0
     best_img_size = -1
 
     # Create threads for different optimizers, filters, kernel sizes and img_size values
     # this will find the best number within each range
+    # def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False, save=False, epochs=150, batch_size=32)
     optimizer = ['rmsprop', 'nadam', 'adam']
-    for i in range(1):
-        for j in range(1, 21):
-            for l in range(10, 110, 10):
+    for i in range(3):
+        for j in range(3, 5):
+            for l in range(80, 110, 10):
                 results = [pool.apply_async(
-                    pscnn.pscnn(epochs=1, batch_size=1), args=([optimizer[i], j, (j, j), l]))]
+                    pscnn.pscnn, args=([optimizer[i], j, (j, j), l, False, False, 1, 1]))]
 
     pool.close()
 
@@ -44,10 +45,10 @@ if __name__ == '__main__':
         output.append(job.get())
 
     for x in output:
-        if (x[2] < least_error):
-            least_error = x[2]
-            best_img_size = x[0]
-            news = x[3]
+        if (x[3] > best_accuracy):
+            best_accuracy = x[3]
+            best_img_size = x[0]  # array
+            model = x[4]
 
         # only in logLevel DEBUG, print all results
         psLog.debug("-----------")
@@ -57,13 +58,13 @@ if __name__ == '__main__':
         psLog.debug("Img size: %s", str(x[1]))
 
     psLog.debug("Saving best CNN model...")
-    pscnn.pscnn.model.save((news, best_img_size), 'ps_cnn_model_2.h5')
+    model.save('ps_cnn_model_2.h5')
     psLog.debug("Model saved.")
     psLog.info("------------------------------")
 
     total_time = time.time() - starttime
 
     # Results:
-    psLog.info("Best error rate: %s", least_error)
+    psLog.info("Best error rate: %s", best_accuracy)
     psLog.info("Best img size: %s", best_img_size)
     psLog.info("Total time: %s", total_time)

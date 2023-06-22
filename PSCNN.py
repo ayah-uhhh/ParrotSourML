@@ -95,7 +95,7 @@ def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show
     psLog.debug('Accuracy: %.2f', (accuracy*100))
     psLog.debug("Loss: %s", loss)
 
-    return [img_size, elapsed_time, loss, accuracy, model.summary()]
+    return [img_size, elapsed_time, loss, accuracy, model]
 
 
 pscnn()

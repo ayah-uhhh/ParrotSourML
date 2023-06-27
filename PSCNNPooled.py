@@ -47,8 +47,12 @@ if __name__ == '__main__':
     for x in output:
         if (x[3] > best_accuracy):
             best_accuracy = x[3]
-            best_img_size = x[0]  # array
+            best_params = x[0]  # array
             model = x[4]
+
+    if best_params is not None:
+        with open('best_params.txt', 'w') as file:
+            file.write(str(best_params))
 
         # only in logLevel DEBUG, print all results
         psLog.debug("-----------")
@@ -58,7 +62,7 @@ if __name__ == '__main__':
         psLog.debug("Img size: %s", str(x[1]))
 
     psLog.debug("Saving best CNN model...")
-    model.save('ps_cnn_model_2.h5')
+    # model.save('ps_cnn_model_2.h5')
     psLog.debug("Model saved.")
     psLog.info("------------------------------")
 

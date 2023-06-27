@@ -48,11 +48,15 @@ if __name__ == '__main__':
         if (x[3] > best_accuracy):
             best_accuracy = x[3]
             best_params = x[0]  # array
+            best_optimizer = x[0][0]
+            best_filters = x[0][1]
+            best_kernel_size = x[0][2]
+            best_img_size = x[0][3]
             model = x[4]
 
-    if best_params is not None:
-        with open('best_params.txt', 'w') as file:
-            file.write(str(best_params))
+        if best_params is not None:
+            with open('best_params.txt', 'w') as file:
+                file.write(str(best_params))
 
         # only in logLevel DEBUG, print all results
         psLog.debug("-----------")

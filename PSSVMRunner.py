@@ -8,7 +8,7 @@ Intended to be run with the best img_size found via the Pooled RF.
 """
 import logging
 
-import ParrotSourSVM as psvm
+import PSSVM as psvm
 from PSLogger import psLog
 
 psLog.setLevel(logging.DEBUG)

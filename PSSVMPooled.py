@@ -13,7 +13,7 @@ import time
 import joblib
 from tqdm import tqdm
 
-import ParrotSourSVM as psvm
+import PSSVM as psvm
 from PSLogger import psLog
 
 psLog.setLevel(logging.INFO)

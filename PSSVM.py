@@ -16,7 +16,7 @@ from PSLogger import psLog
 from PSUtils import OUT_DIR, get_pics
 
 
-def psSVM(save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False):
+def psSVM(save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm=False, probability=False):
     """
     Higher C decreases the amount of misclassified data points in the trainng set
     but may increase misclassification in test data. C is log
@@ -32,7 +32,8 @@ def psSVM(save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm
         X, Y, test_size=0.2, shuffle=False)
     psLog.debug("Loaded data (%.2fs)", (time.time()-start_time))
 
-    clf = svm.SVC(kernel=kernel, C=sea, decision_function_shape=shape)
+    clf = svm.SVC(kernel=kernel, C=sea,
+                  decision_function_shape=shape, probability=probability)
     psLog.debug("Training model...")
     start_time = time.time()
     clf.fit(X_train, y_train)

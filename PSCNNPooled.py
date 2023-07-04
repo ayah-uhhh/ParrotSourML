@@ -35,7 +35,7 @@ if __name__ == '__main__':
         for j in range(3, 5):
             for l in range(80, 110, 10):
                 results = [pool.apply_async(
-                    pscnn.pscnn, args=([optimizer[i], j, (j, j), l, False, False, 1, 1]))]
+                    pscnn.pscnn, args=([optimizer[i], j, (j, j), l, False, False, 150, 32]))]
 
     pool.close()
 
@@ -66,7 +66,7 @@ if __name__ == '__main__':
         psLog.debug("Img size: %s", str(x[1]))
 
     psLog.debug("Saving best CNN model...")
-    # model.save('ps_cnn_model_2.h5')
+    model.save('ps_cnn_model_2.h5')
     psLog.debug("Model saved.")
     psLog.info("------------------------------")
 

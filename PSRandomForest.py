@@ -22,7 +22,7 @@ from PSLogger import psLog
 from PSUtils import IMAGE_DIR, OUT_DIR, get_pics
 
 
-def randomforest(save=False, img_size=30, n_estimators=240, use_pca=False, show_cm=False):
+def randomforest(save=False, img_size=30, n_estimators=240, use_pca=False, show_cm=False, probability=True):
     """
     Run sklearn random forest model training and prediction.
 
@@ -98,5 +98,13 @@ def randomforest(save=False, img_size=30, n_estimators=240, use_pca=False, show_
             y_test, predicted)
         disp.figure_.suptitle("Confusion Matrix")
         plt.show()
+
+    if probability:
+        probabilities = forest.predict_proba(x_test)
+        max_probabilities = np.max(probabilities, axis=1)
+        confidence = max_probabilities * 100
+        labels = forest.classes_[np.argmax(probabilities, axis=1)]
+        for conf, label in zip(confidence, labels):
+            print(f"Random Forest Confidence: {conf:.2f}%, Label: {label}")
 
     return [img_size, elapsed_time, error_rate, forest]

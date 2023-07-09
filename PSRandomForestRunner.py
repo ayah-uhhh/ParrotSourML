@@ -16,6 +16,6 @@ psLog.setLevel(logging.DEBUG)
 psLog.info("------------------------------")
 
 _, time_elapsed, error, _ = psrf.randomforest(
-    img_size=14, show_cm=True, save=True, n_estimators=1000)
+    img_size=14, show_cm=False, save=True, n_estimators=1000, probability=True)
 
 psLog.info("------------------------------")

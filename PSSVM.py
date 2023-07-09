@@ -64,4 +64,12 @@ def psSVM(save=False, kernel="linear", sea=1, shape='ovr', size_img=100, show_cm
         disp.figure_.suptitle("Confusion Matrix")
         plt.show()
 
+    if probability:
+        probabilities = clf.predict_proba(X_test)
+        max_probabilities = np.max(probabilities, axis=1)
+        confidence = max_probabilities * 100
+        labels = clf.classes_[np.argmax(probabilities, axis=1)]
+        for conf, label in zip(confidence, labels):
+            print(f"SVM Confidence: {conf:.2f}%, Label: {label}")
+
     return [model_settings, elapsed_time, error_rate, (clf, model_settings)]

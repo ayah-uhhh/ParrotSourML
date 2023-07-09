@@ -16,6 +16,6 @@ psLog.setLevel(logging.DEBUG)
 psLog.info("------------------------------")
 
 _, time_elapsed, error, _ = psvm.psSVM(size_img=14,
-                                       kernel="rbf", sea=10, shape="ovr", show_cm=False, save=True)
+                                       kernel="rbf", sea=10, shape="ovr", show_cm=False, save=True, probability=True)
 
 psLog.info("------------------------------")

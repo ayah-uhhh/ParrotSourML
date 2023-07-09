@@ -7,3 +7,4 @@
 - Set up local test to ingest single data point for above^^ 
     -- ingest data not file
 - Confidence intervals??
+- Add updated description of files

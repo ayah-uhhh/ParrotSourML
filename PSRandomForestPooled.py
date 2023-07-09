@@ -38,12 +38,12 @@ if __name__ == '__main__':
     # Create threads for different img_size values
     # for x in range (10,50) will go through img_size values between 10 and 49
     # and find the best number within that range
-    results = [pool.apply_async(psrf.randomforest, args=([False, x]))
+    results = [pool.apply_async(psrf.randomforest, args=([False, x, 240, False, False, True]))
                for x in range(10, 25)]
 
     # Also try 14,15,16,19 as these have historically been the lowest error rates
     results.extend([pool.apply_async(
-        psrf.randomforest, args=([False, x])) for x in [14, 15, 16, 19]])
+        psrf.randomforest, args=([False, x, 240, False, False, True])) for x in [14, 15, 16, 19]])
 
     pool.close()
 

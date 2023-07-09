@@ -47,9 +47,9 @@ def svm_pool(minsize=10, maxsize=20):
 
         # x is "C" value for SVM
         for size in range(minsize, maxsize):
-            results.extend([pool.apply_async(psvm.psSVM, args=([False, "linear", x, 'ovr', size]))
+            results.extend([pool.apply_async(psvm.psSVM, args=([False, "linear", x, 'ovr', size, False, True]))
                             for x in (10**i for i in range(-2, 4))])
-            results.extend([pool.apply_async(psvm.psSVM, args=([False, "rbf", x, 'ovr', size]))
+            results.extend([pool.apply_async(psvm.psSVM, args=([False, "rbf", x, 'ovr', size, False, True]))
                             for x in (10**i for i in range(-2, 4))])
 
         pool.close()

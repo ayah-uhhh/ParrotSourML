@@ -1,12 +1,11 @@
-"""tf trial"""
 import logging
 import time
 
+import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from keras.models import Sequential
-from PIL import Image
 from sklearn.model_selection import train_test_split
 
 from PSCNNUtils import get_cnn_pics, one_hot_encode_labels
@@ -16,7 +15,7 @@ from PSLogger import psLog
 psLog.setLevel(logging.DEBUG)
 
 
-def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False, save=False, epochs=150, batch_size=32):
+def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show_chart=False, save=False, epochs=150, batch_size=32, probability=True):
     # optimizer = 'nadam', 'rmsprop', 'adam'
     """Import Data"""
 
@@ -94,6 +93,13 @@ def pscnn(optimizer='rmsprop', filters=3, kernel_size=(3, 3), img_size=100, show
 
     psLog.debug('Accuracy: %.2f', (accuracy*100))
     psLog.debug("Loss: %s", loss)
+
+    if probability:
+        predictions = model.predict(X_test)
+        confidence = np.max(predictions, axis=1) * 100
+        labels = np.argmax(predictions, axis=1)
+        for conf, label in zip(confidence, labels):
+            print(f"CNN Confidence: {conf:.2f}%, Label: {label}")
 
     return [(optimizer, filters, kernel_size, img_size), elapsed_time, loss, accuracy, model]
 

@@ -35,7 +35,7 @@ if __name__ == '__main__':
         for j in range(3, 5):
             for l in range(80, 110, 10):
                 results = [pool.apply_async(
-                    pscnn.pscnn, args=([optimizer[i], j, (j, j), l, False, False, 150, 32, True]))]
+                    pscnn.pscnn, args=([optimizer[i], j, (j, j), l, False, False, 100, 32, True]))]
 
     pool.close()
 

@@ -24,7 +24,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         name: Upload RF Model
         with:
-          name: best-cnn-model
+          name: cnn-model
           path: ps_cnn_model_2.h5
 
   

@@ -37,7 +37,7 @@ if __name__ == "__main__":
     start_time = time.time()
     loaded_model, loaded_model_settings = joblib.load(
         open('PSSVMSaved.jbl', 'rb'))
-    clf = loaded_model()
+    clf = loaded_model
     kernel, sea, shape, size_img = loaded_model_settings
 
     psLog.debug("Loaded model. (%.2fs)", time.time()-start_time)

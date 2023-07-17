@@ -149,7 +149,8 @@ jobs:
         with:
           name: cnn-model
 
-      - run: python PSCNNTest.py
+      - name: Run CNN Prediction
+        run: python PSCNNTest.py
 
   cnn_large:
     runs-on: ubuntu-latest

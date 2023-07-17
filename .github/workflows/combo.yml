@@ -128,7 +128,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         name: Upload CNN Model
         with:
-          name: best-cnn-model
+          name: cnn-model
           path: ps_cnn_model.h5
 
   cnn_predict:
@@ -145,9 +145,9 @@ jobs:
       - run: pip install -r requirements.txt
 
       - uses: actions/download-artifact@v2
-        name: Download saved SVM model
+        name: Download saved CNN model
         with:
-          name: best-cnn-model
+          name: cnn-model
 
       - run: python PSCNNTest.py
 

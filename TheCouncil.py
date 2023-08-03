@@ -4,8 +4,6 @@ import os
 import time
 
 import joblib
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import metrics
 
@@ -31,9 +29,6 @@ def svm_test():
     kernel, sea, shape, size_img = svm_settings
     psLog.debug("Loaded SVM model. (%.2fs)", time.time()-start_time)
 
-    # Data must be read after loading model due to reliance on img_size from previous saved
-    # model. In the event of a pooled run, we need to capture the config from the saved file
-    # since we cannot guarantee the same result for each run
     psLog.debug("Reading data...")
     start_time = time.time()
     Y = np.loadtxt(os.path.join("predict", "Y.txt"), dtype=str)
@@ -92,6 +87,57 @@ def random_forest_test():
                 (error_rate_rf * 100))
 
     return predicted_rf, elapsed_time_rf, error_rate_rf
+
+
+def cnn_test():
+
+    with open('best_params.txt', 'r') as file:
+        best_params = file.read()
+    best_params = best_params.replace(
+        '(', '').replace(')', '').replace(',', '')
+    best_params_list = best_params.split()
+
+    # Extract the best parameters
+    best_optimizer = best_params_list[0]
+    best_filters = int(best_params_list[1])
+    best_kernel_size = int(best_params_list[2])
+    best_img_size = int(best_params_list[4])
+
+    psLog.debug("Preprocessing test data...")
+    start_time = time.time()
+    preprocess('data5000.json', 'predict')
+    psLog.debug('Test data preprocessed. (%.2f)', time.time()-start_time)
+
+    psLog.debug("Loading model...")
+    start_time = time.time()
+    model = tf.keras.models.load_model('ps_cnn_model.h5')
+
+    model.optimizer = best_optimizer
+    model.filters = best_filters
+    model.kernel_size = (best_kernel_size, best_kernel_size)
+    model.img_size = best_img_size
+
+    psLog.debug("Reading data...")
+    start_time = time.time()
+    Y = one_hot_encode_labels(os.path.join('predict', "Y.txt"))
+    X = get_cnn_pics(os.path.join('predict', 'images'))
+
+    psLog.debug("Loaded data (%.2fs)", time.time()-start_time)
+
+    psLog.debug("Classifying...")
+    start_time = time.time()
+    predicted_cnn = model.predict(X)
+    elapsed_time_cnn = time.time() - start_time
+
+    # Calculate the error rate by finding the index of the predicted class with the highest probability
+    predicted_cnn_labels = np.argmax(predicted_cnn, axis=1)
+    error_rate_cnn = 1 - \
+        metrics.accuracy_score(np.argmax(Y, axis=1), predicted_cnn_labels)
+
+    psLog.debug("CNN Classification complete. (%.2fs)", elapsed_time_cnn)
+    psLog.debug("CNN Classification error: %.2f%%", (error_rate_cnn * 100))
+
+    return predicted_cnn, elapsed_time_cnn, error_rate_cnn
 
 
 if __name__ == '__main__':

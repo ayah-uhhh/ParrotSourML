@@ -132,7 +132,7 @@ jobs:
           path: ps_cnn_model.h5
 
   cnn_predict:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: [cnn]
     steps:
       - uses: actions/checkout@v3

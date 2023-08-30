@@ -1,3 +1,10 @@
+from PSCNNUtils import get_cnn_pics, one_hot_encode_labels
+import tensorflow as tf
+from PSUtils import get_pics
+from PSLogger import psLog
+from ParrotSourPreProcessor import preprocess
+from sklearn import metrics
+import matplotlib.pyplot as plt
 import logging
 import multiprocessing as mp
 import os
@@ -5,17 +12,12 @@ import time
 
 import joblib
 import numpy as np
-from sklearn import metrics
 
-from ParrotSourPreProcessor import preprocess
-from PSLogger import psLog
-from PSUtils import get_pics
 
 psLog.setLevel(logging.DEBUG)
 
 
 def svm_test():
-    total_time = time.time()
 
     psLog.debug("Preprocessing test data...")
     start_time = time.time()
@@ -53,7 +55,6 @@ def svm_test():
 
 
 def random_forest_test():
-    total_time = time.time()
 
     psLog.debug("Generating new images...")
     start_time = time.time()
@@ -105,7 +106,7 @@ def cnn_test():
 
     psLog.debug("Preprocessing test data...")
     start_time = time.time()
-    preprocess('data5000.json', 'predict')
+    preprocess('data50.json', 'predict')
     psLog.debug('Test data preprocessed. (%.2f)', time.time()-start_time)
 
     psLog.debug("Loading model...")
@@ -132,7 +133,7 @@ def cnn_test():
     # Calculate the error rate by finding the index of the predicted class with the highest probability
     predicted_cnn_labels = np.argmax(predicted_cnn, axis=1)
     error_rate_cnn = 1 - \
-        metrics.accuracy_score(np.argmax(Y, axis=1), predicted_cnn_labels)
+        metrics.accuracy_score(Y, predicted_cnn_labels)
 
     psLog.debug("CNN Classification complete. (%.2fs)", elapsed_time_cnn)
     psLog.debug("CNN Classification error: %.2f%%", (error_rate_cnn * 100))
@@ -145,6 +146,14 @@ if __name__ == '__main__':
 
     predicted_svm, elapsed_time_svm, error_rate_svm = svm_test()
     predicted_rf, elapsed_time_rf, error_rate_rf = random_forest_test()
+    predicted_cnn, elapsed_time_cnn, error_rate_cnn = cnn_test()
+
+    # Store the error rates for each algorithm
+    error_rates = {
+        "SVM": error_rate_svm,
+        "Random Forest": error_rate_rf,
+        "CNN": error_rate_cnn
+    }
 
     labelmap = {'AZIMUTH': 0, 'RANGE': 1, 'WALL': 2,
                 'LADDER': 3, 'CHAMPAGNE': 4, 'VIC': 5, 'SINGLE': 6}
@@ -156,10 +165,12 @@ if __name__ == '__main__':
     Y = np.array([labelmap[label] for label in Y])
 
     # Calculate weighted average
-    weight_svm = 0.6  # Arbitrary
-    weight_rf = 0.4
+    weight_svm = 0.3  # Arbitrary
+    weight_rf = 0.3
+    weight_cnn = 0.4
 
-    weighted_predicted = weight_svm * predicted_svm + weight_rf * predicted_rf
+    weighted_predicted = (weight_svm * predicted_svm) + \
+        (weight_rf * predicted_rf) + (weight_cnn * predicted_cnn)
     final_predicted = np.argmax(weighted_predicted, axis=1)
 
     # Convert numerical labels back to string labels
@@ -169,9 +180,29 @@ if __name__ == '__main__':
 
     weighted_error_rate = 1 - metrics.accuracy_score(Y, final_predicted)
 
+    # Convert numerical labels back to string labels
+    labelmap_inverse = {v: k for k, v in labelmap.items()}
+    final_true_labels = np.array([labelmap_inverse[label] for label in Y])
+
     # Debug logging
     psLog.debug("Weighted Average Classification complete.")
     psLog.debug("Final Predicted Labels: %s", final_predicted_labels)
-    psLog.debug("True Labels: %s", Y)
+    psLog.debug("True Labels: %s", final_true_labels)  # Print the class labels
     psLog.debug("Weighted Average Classification error: %.2f%%",
                 (weighted_error_rate * 100))
+
+    # Print the error rates of each algorithm
+    for algo, error_rate in error_rates.items():
+        print(f"{algo} Error Rate: {error_rate:.2%}")
+
+    # Create a comparison graph
+    plt.figure(figsize=(10, 6))
+    plt.bar(error_rates.keys(), error_rates.values())
+    plt.xlabel('Algorithms')
+    plt.ylabel('Error Rate')
+    plt.title('Algorithm Performance Comparison')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    # Save or display the graph
+    plt.savefig('algorithm_comparison.png')

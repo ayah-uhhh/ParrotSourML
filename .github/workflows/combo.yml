@@ -129,7 +129,7 @@ jobs:
         name: Upload CNN Model
         with:
           name: cnn-model
-          path: ps_cnn_model.h5
+          path: ps_cnn_model_2.h5
 
   cnn_predict:
     runs-on: ubuntu-latest

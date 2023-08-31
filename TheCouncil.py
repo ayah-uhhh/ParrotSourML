@@ -16,12 +16,14 @@ import numpy as np
 
 psLog.setLevel(logging.DEBUG)
 
+json_data = 'data50.json'
+
 
 def svm_test():
 
     psLog.debug("Preprocessing test data...")
     start_time = time.time()
-    preprocess('data50.json', 'predict')
+    preprocess(json_data, 'predict')
     psLog.debug('Test data preprocessed. (%.2f)', time.time()-start_time)
 
     psLog.debug("Loading SVM model...")
@@ -58,7 +60,7 @@ def random_forest_test():
 
     psLog.debug("Generating new images...")
     start_time = time.time()
-    preprocess('data50.json', 'predict')
+    preprocess(json_data, 'predict')
     psLog.debug("Generated images. (%.2f)", time.time()-start_time)
 
     psLog.debug("Loading Random Forest model...")
@@ -106,7 +108,7 @@ def cnn_test():
 
     psLog.debug("Preprocessing test data...")
     start_time = time.time()
-    preprocess('data50.json', 'predict')
+    preprocess(json_data, 'predict')
     psLog.debug('Test data preprocessed. (%.2f)', time.time()-start_time)
 
     psLog.debug("Loading model...")
@@ -144,9 +146,10 @@ def cnn_test():
 if __name__ == '__main__':
     mp.freeze_support()
 
-    predicted_svm, elapsed_time_svm, error_rate_svm = svm_test()
-    predicted_rf, elapsed_time_rf, error_rate_rf = random_forest_test()
-    predicted_cnn, elapsed_time_cnn, error_rate_cnn = cnn_test()
+    with mp.Pool(processes=3) as pool:
+        predicted_svm, elapsed_time_svm, error_rate_svm = svm_test()
+        predicted_rf, elapsed_time_rf, error_rate_rf = random_forest_test()
+        predicted_cnn, elapsed_time_cnn, error_rate_cnn = cnn_test()
 
     # Store the error rates for each algorithm
     error_rates = {

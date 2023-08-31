@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     psLog.debug("Loading model...")
     start_time = time.time()
-    model = tf.keras.models.load_model('ps_cnn_model.h5')
+    model = tf.keras.models.load_model('ps_cnn_model_2.h5')
 
     model.optimizer = best_optimizer
     model.filters = best_filters

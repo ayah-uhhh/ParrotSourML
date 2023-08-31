@@ -109,31 +109,31 @@ jobs:
 
       - run: python PSSVMTest.py
 
-  cnn:
-    runs-on: ubuntu-latest
+  cnn_pooled:
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Python 3.10.1
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v2
+      - name: Use Python 3.9
+        uses: actions/setup-python@v2
         with:
           python-version: "3.9"
-          cache: "pip" # caching pip dependencies
-          cache-dependency-path: "**/requirements.txt"
-      - run: pip install -r requirements.txt
-
-      - run: python ParrotSourPreProcessor.py
-
-      - run: python PSCNN.py
-
-      - uses: actions/upload-artifact@v3
-        name: Upload CNN Model
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Preprocess data
+        run: python ParrotSourPreProcessor.py
+      - name: Run CNN script
+        run: python PSCNNPooled.py
+      - name: Upload RF Model
+        uses: actions/upload-artifact@v2
         with:
           name: cnn-model
           path: ps_cnn_model_2.h5
 
   cnn_predict:
     runs-on: ubuntu-latest
-    needs: [cnn]
+    needs: [cnn_pooled]
     steps:
       - uses: actions/checkout@v3
       - name: Use Python 3.10.1
@@ -154,7 +154,7 @@ jobs:
 
   cnn_large:
     runs-on: ubuntu-latest
-    needs: [cnn]
+    needs: [cnn_pooled]
     steps:
       - uses: actions/checkout@v3
       - name: Use Python 3.10.1

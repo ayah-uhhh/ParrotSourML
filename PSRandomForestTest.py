@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     psLog.debug("Preprocessing test data...")
     start_time = time.time()
-    preprocess('data5000.json', 'predict')
+    preprocess('data200.json', 'predict')
     psLog.debug('Test data preprocessed. (%.2f)', time.time()-start_time)
 
     psLog.debug("Loading model...")

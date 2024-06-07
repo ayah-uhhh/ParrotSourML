@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     psLog.debug("Preprocessing test data...")
     start_time = time.time()
-    preprocess('data200.json', 'predict')
+    preprocess('data5000.json', 'predict')
     psLog.debug('Test data preprocessed. (%.2f)', time.time()-start_time)
 
     psLog.debug("Loading model...")
@@ -53,6 +53,7 @@ if __name__ == '__main__':
     # since we cannot guarantee the same result for each run
     psLog.debug("Reading data...")
     start_time = time.time()
+    # Y.txt has been manually checked and is correct
     Y = one_hot_encode_labels(os.path.join('predict', "Y.txt"))
     X = get_cnn_pics(os.path.join('predict', 'images'))
 

@@ -10,7 +10,7 @@ psLog.setLevel(logging.DEBUG)
 
 
 if __name__ == '__main__':
-    # required conditional to avoid recursive multithreading
+    # required conditional to avoid recursive multithreading ..
 
     psLog.info("Finding optimized parameters...")
     psLog.info("---------------")
